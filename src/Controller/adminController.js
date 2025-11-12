@@ -13,6 +13,10 @@ import FooterBannerModel from '../Models/footerBannerModel.js';
 import PricingModel from '../Models/pricingModel.js';
 import MathTestModel from '../Models/mathTestModel.js';
 import TutoringModel from '../Models/tutoringModel.js';
+import BlogModel from '../Models/blogModel.js';
+import RegistrationModel from '../Models/registrationModel.js';
+import AboutIseeModel from '../Models/aboutIseeModel.js';
+import TestPrepModel from '../Models/testPrepModel.js';
 
 const checkPassword = async (password, hashPassword) => {
   const verifyPassword = await bcrypt.compare(password, hashPassword);
@@ -633,16 +637,15 @@ export const upsetMathTest = async (req, res, next) => {
 
 export const addTutoring = async (req, res, next) => {
   try {
-    const { title, description,chapter } = req.body;
+    const { title, description, chapter } = req.body;
 
     if (!title || !description) return res.status(400).json({ success: false, message: "All field is required" });
     if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
 
-    const imagePath = `public/uploads/${req.file.filename}`
     const tutoring = new TutoringModel({
       title,
       description,
-      image: imagePath,chapter
+      chapter
     });
     await tutoring.save();
     res.status(201).json({ message: "tutoring added successfully", data: trust });
@@ -654,24 +657,15 @@ export const addTutoring = async (req, res, next) => {
 export const editTutoring = async (req, res, next) => {
   try {
 
-    const { title, description,chapter, _id } = req.body;
+    const { title, description, chapter, _id } = req.body;
 
     const tutoringData = await TutoringModel.findById(_id);
     if (!tutoringData)
       return res.status(404).json({ success: false, message: "tutoring data not found" });
 
-    if (req.file) {
-      if (tutoringData.image) {
-        const oldPath = path.join("public", tutoringData.image);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-      }
-      tutoringData.image = `public/uploads/${req.file.filename}`;
-    }
-
     tutoringData.title = title || tutoringData.title;
     tutoringData.description = description || tutoringData.description;
     tutoringData.chapter = chapter || tutoringData.chapter;
-
     await tutoringData.save();
     res.status(200).json({
       success: true,
@@ -690,14 +684,152 @@ export const deleteTutoring = async (req, res, next) => {
     const tutoringData = await TutoringModel.findById(id);
     if (!tutoringData) return res.status(404).json({ success: false, message: "tutoringData not found" });
     await TutoringModel.findByIdAndDelete(id);
-    if (tutoringData.image) {
-      const imagePath = path.resolve(tutoringData.image);
+    res.json({ success: true, message: "tutoringData deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+export const addBlog = async (req, res, next) => {
+  try {
+    const { title, description } = req.body;
+
+    if (!title || !description) return res.status(400).json({ success: false, message: "All field is required" });
+    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+
+    const imagePath = `public/uploads/${req.file.filename}`
+    const blog = new BlogModel({
+      title,
+      description,
+      image: imagePath,
+    });
+    await blog.save();
+    res.status(201).json({ message: "blog added successfully", data: blog });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const editBlog = async (req, res, next) => {
+  try {
+
+    const { title, description, _id } = req.body;
+
+    const blogData = await BlogModel.findById(_id);
+    if (!blogData)
+      return res.status(404).json({ success: false, message: "blog data not found" });
+
+    if (req.file) {
+      if (blogData.image) {
+        const oldPath = path.join("public", blogData.image);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+      blogData.image = `public/uploads/${req.file.filename}`;
+    }
+
+    blogData.title = title || blogData.title;
+    blogData.description = description || blogData.description;
+    await blogData.save();
+
+    res.status(200).json({
+      success: true,
+      message: "blogData updated successfully",
+      data: blogData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteBlog = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const blogData = await BlogModel.findById(id);
+    if (!blogData) return res.status(404).json({ success: false, message: "blogData not found" });
+    await BlogModel.findByIdAndDelete(id);
+    if (blogData.image) {
+      const imagePath = path.resolve(blogData.image);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }
     }
-    res.json({ success: true, message: "tutoringData deleted successfully" });
+    res.json({ success: true, message: "blogData deleted successfully" });
   } catch (error) {
     next(error);
+  }
+};
+
+
+export const upsertRegistration = async (req, res) => {
+  try {
+    const { title, description } = req.body;
+
+    if (!title || !description) {
+      return res.status(400).json({ message: "Title and description are required." });
+    }
+
+    const registrationData = { title, description };
+    const result = await RegistrationModel.findOneAndUpdate(
+      {},
+      registrationData,
+      { new: true, upsert: true }
+    );
+    return res.status(200).json({
+      message: "Registration saved successfully.",
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+export const upsertAboutIsee = async (req, res, next) => {
+  try {
+    const { title, purpose, testStructure } = req.body;
+
+    if (!title || !purpose || !testStructure) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const result = await AboutIseeModel.findOneAndUpdate(
+      {},
+      { title, purpose, testStructure },
+      { new: true, upsert: true }
+    );
+
+    return res.status(200).json({
+      message: "about Isee saved successfully",
+      data: result
+    });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const upsertTestPrep = async (req, res, next) => {
+  try {
+    const { description } = req.body;
+
+    if (!description) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const result = await TestPrepModel.findOneAndUpdate(
+      {},
+      { description },
+      { new: true, upsert: true }
+    );
+
+    return res.status(200).json({
+      message: "Test prep saved successfully",
+      data: result
+    });
+  } catch (error) {
+    next(error)
   }
 };

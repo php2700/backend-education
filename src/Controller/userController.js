@@ -1,10 +1,14 @@
+import AboutIseeModel from "../Models/aboutIseeModel.js";
 import BannerModel from "../Models/bannerModel.js";
+import BlogModel from "../Models/blogModel.js";
 import FooterBannerModel from "../Models/footerBannerModel.js";
 import MathTestModel from "../Models/mathTestModel.js";
 import OfferModel from "../Models/offerModel.js";
 import PlanModel from "../Models/planModel.js";
 import PricingModel from "../Models/pricingModel.js";
+import RegistrationModel from "../Models/registrationModel.js";
 import StoryModel from "../Models/successStoryModel.js";
+import TestPrepModel from "../Models/testPrepModel.js";
 import TrustModel from "../Models/trustModel.js";
 import TutoringModel from "../Models/tutoringModel.js";
 import WhyChooseModel from "../Models/whyChooseModel.js";
@@ -94,6 +98,42 @@ export const getTutoring = async (req, res, next) => {
   try {
     const tutoringData = await TutoringModel.findOne()
     res.json({ data: tutoringData });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const getBlog = async (req, res, next) => {
+  try {
+    const blogData = await BlogModel.find().sort({ createdAt: -1 });
+    res.json({ data: blogData });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const getRegistration = async (req, res, next) => {
+  try {
+    const registrationData = await RegistrationModel.findOne()
+    res.json({ data: registrationData });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const getAboutIsee = async (req, res, next) => {
+  try {
+    const aboutIseeData = await AboutIseeModel.findOne()
+    res.json({ data: aboutIseeData });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const getTestPrep = async (req, res, next) => {
+  try {
+    const getTestPrepData = await TestPrepModel.findOne()
+    res.json({ data: getTestPrepData });
   } catch (error) {
     next(error)
   }

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { addBanner, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addTutoring, addWhyChoose, deleteBanner, deleteOffer, deletePlan, deletePricing, deleteStory, deleteTrust, deleteTutoring, deleteWhyChoose, editBanner, editOffer, editPlan, editPricing, editStory, editTrust, editTutoring, editWhyChoose, Login, upsetMathTest } from "../Controller/adminController.js";
+import { addBanner, addBlog, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addTutoring, addWhyChoose, deleteBanner, deleteBlog, deleteOffer, deletePlan, deletePricing, deleteStory, deleteTrust, deleteTutoring, deleteWhyChoose, editBanner, editBlog, editOffer, editPlan, editPricing, editStory, editTrust, editTutoring, editWhyChoose, Login, upsertAboutIsee, upsertRegistration, upsertTestPrep, upsetMathTest } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
-import { getBanner, getFooterBanner, getMathTest, getOffer, getPlan, getPricing, getStory, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { getAboutIsee, getBanner, getBlog, getFooterBanner, getMathTest, getOffer, getPlan, getPricing, getRegistration, getStory, getTestPrep, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
 
 
 const adminRouter = Router();
@@ -69,9 +69,30 @@ adminRouter.post("/math-test", authentication, authorization(['admin']), upsetMa
 adminRouter.get("/math-test", authentication, authorization(['admin']), getMathTest)
 
 /*---------------------tutoring  -----------------------*/
-adminRouter.post("/tutoring", authentication, authorization(['admin']), upload.single("bgImage"), addTutoring)
-adminRouter.patch("/tutoring", authentication, authorization(['admin']), upload.single("bgImage"), editTutoring)
+adminRouter.post("/tutoring", authentication, authorization(['admin']), addTutoring)
+adminRouter.patch("/tutoring", authentication, authorization(['admin']), editTutoring)
 adminRouter.get("/tutoring", authentication, authorization(['admin']), getTutoring)
 adminRouter.delete("/tutoring/:id", authentication, authorization(['admin']), deleteTutoring)
+
+/*======================blog maa amc  ===========================*/
+adminRouter.post("/blog", authentication, authorization(['admin']), upload.single("image"), addBlog)
+adminRouter.patch("/blog", authentication, authorization(['admin']), upload.single("image"), editBlog)
+adminRouter.get("/blog", authentication, authorization(['admin']), getBlog)
+adminRouter.delete("/blog/:id", authentication, authorization(['admin']), deleteBlog)
+
+/*=============english================*/
+/*--------------------registration details---------------*/
+adminRouter.post("/registration", authentication, authorization(['admin']), upsertRegistration)
+adminRouter.get("/registration", authentication, authorization(['admin']), getRegistration)
+
+
+/*--------------------all about isee test---------------*/
+adminRouter.post("/about-isee", authentication, authorization(['admin']), upsertAboutIsee)
+adminRouter.get("/about-isee", authentication, authorization(['admin']), getAboutIsee)
+
+
+/*--------------------all about isee prep---------------*/
+adminRouter.post("/test-prep", authentication, authorization(['admin']), upsertTestPrep)
+adminRouter.get("/test-prep", authentication, authorization(['admin']), getTestPrep)
 
 export default adminRouter

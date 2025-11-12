@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 
 const tutoringSchema = new mongoose.Schema({
-    bgImage: {
-        type: String,
-        required: true
-    },
+   
     title: {
         type: String,
         required: true,
