@@ -16,7 +16,12 @@ import TutoringModel from '../Models/tutoringModel.js';
 import BlogModel from '../Models/blogModel.js';
 import RegistrationModel from '../Models/registrationModel.js';
 import AboutIseeModel from '../Models/aboutIseeModel.js';
-import TestPrepModel from '../Models/testPrepModel.js';
+import AboutElaModel from '../Models/aboutElaModel.js';
+import CommonCoreModel from '../Models/commonCoreModel.js';
+import CommonLanguageModel from '../Models/commonLanguageModel.js';
+import ChapterModel from '../Models/chapterModel.js';
+import CompetitionModel from '../Models/competitionModel.js';
+import KangarooModel from '../Models/kangarooModel.js';
 
 const checkPassword = async (password, hashPassword) => {
   const verifyPassword = await bcrypt.compare(password, hashPassword);
@@ -635,61 +640,32 @@ export const upsetMathTest = async (req, res, next) => {
   }
 };
 
-export const addTutoring = async (req, res, next) => {
+export const upsertTutoring = async (req, res, next) => {
   try {
-    const { title, description, chapter } = req.body;
+    const { heading, headingDescription, chapter } = req.body;
 
-    if (!title || !description) return res.status(400).json({ success: false, message: "All field is required" });
-    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+    if (!heading || !headingDescription) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
 
-    const tutoring = new TutoringModel({
-      title,
-      description,
-      chapter
-    });
-    await tutoring.save();
-    res.status(201).json({ message: "tutoring added successfully", data: trust });
-  } catch (error) {
-    next(error)
-  }
-};
+    const updatedTutoring = await TutoringModel.findOneAndUpdate(
+      {},
+      { heading, headingDescription, chapter },
+      { new: true, upsert: true }
+    );
 
-export const editTutoring = async (req, res, next) => {
-  try {
-
-    const { title, description, chapter, _id } = req.body;
-
-    const tutoringData = await TutoringModel.findById(_id);
-    if (!tutoringData)
-      return res.status(404).json({ success: false, message: "tutoring data not found" });
-
-    tutoringData.title = title || tutoringData.title;
-    tutoringData.description = description || tutoringData.description;
-    tutoringData.chapter = chapter || tutoringData.chapter;
-    await tutoringData.save();
     res.status(200).json({
       success: true,
-      message: "tutoringData updated successfully",
-      data: tutoringData,
+      message: "Tutoring data saved successfully",
+      data: updatedTutoring,
     });
   } catch (error) {
     next(error);
   }
 };
-
-export const deleteTutoring = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    const tutoringData = await TutoringModel.findById(id);
-    if (!tutoringData) return res.status(404).json({ success: false, message: "tutoringData not found" });
-    await TutoringModel.findByIdAndDelete(id);
-    res.json({ success: true, message: "tutoringData deleted successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
-
 
 
 export const addBlog = async (req, res, next) => {
@@ -792,7 +768,7 @@ export const upsertAboutIsee = async (req, res, next) => {
   try {
     const { title, purpose, testStructure } = req.body;
 
-    if (!title || !purpose || !testStructure) {
+    if (!title || !purpose || !testStructure  ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -811,25 +787,213 @@ export const upsertAboutIsee = async (req, res, next) => {
   }
 };
 
-export const upsertTestPrep = async (req, res, next) => {
-  try {
-    const { description } = req.body;
 
-    if (!description) {
-      return res.status(400).json({ message: "All fields are required" });
+
+
+export const upsertAboutEla = async (req, res, next) => {
+  try {
+    const { testPrepDescription, description, heading, whoTake, questionType } = req.body;
+
+    if (!description || !testPrepDescription || !heading || !whoTake || !questionType) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
-    const result = await TestPrepModel.findOneAndUpdate(
+    const existing = await AboutElaModel.findOne();
+
+    let result;
+
+    if (existing) {
+      existing.description = description;
+      existing.heading = heading;
+      existing.whoTake = whoTake;
+      existing.questionType = questionType;
+      existing.testPrepDescription = testPrepDescription
+      result = await existing.save();
+    } else {
+      const newQuestion = new AboutElaModel({
+        description,
+        heading,
+        whoTake,
+        questionType,
+        testPrepDescription
+      });
+      result = await newQuestion.save();
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "about Ela saved successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const upsertCommonCore = async (req, res, next) => {
+  try {
+    const { description, coverDescription, heading } = req.body;
+
+    if (!description || !coverDescription || !heading) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+
+    const updatedCommonCore = await CommonCoreModel.findOneAndUpdate(
       {},
-      { description },
+      { description, coverDescription, heading },
       { new: true, upsert: true }
     );
 
-    return res.status(200).json({
-      message: "Test prep saved successfully",
-      data: result
+    res.status(200).json({
+      success: true,
+      message: "CommonCore data saved successfully",
+      data: updatedCommonCore,
     });
   } catch (error) {
-    next(error)
+    next(error);
+  }
+};
+
+export const upsertCommonLanguageArt = async (req, res, next) => {
+  try {
+    const { description, heading } = req.body;
+
+    if (!description || !heading) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+    const updatedLanguage = await CommonLanguageModel.findOneAndUpdate(
+      {},
+      { description, heading },
+      { new: true, upsert: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "Language data saved successfully",
+      data: updatedLanguage,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const upsertChapter = async (req, res, next) => {
+  try {
+    const { title, description, subjectDescription, chapterName } = req.body;
+
+    if (!title || !description || !subjectDescription || !chapterName) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    const updatedChapter = await ChapterModel.findOneAndUpdate(
+      {},
+      { title, description, subjectDescription, chapterName },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Chapter data saved successfully",
+      data: updatedChapter,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const upsertCompetition = async (req, res) => {
+  try {
+    const { description, title, condition, competition,whyTake } = req.body;
+    const competitionData = await CompetitionModel.findOneAndUpdate(
+      {},
+      {
+        description,
+        title,
+        condition,
+        competition,whyTake
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Competition data saved successfully",
+      data: competitionData
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const upsertKangaroo = async (req, res, next) => {
+  try {
+    const { testPrepDescription, testStructureDescription, data } = req.body;
+    let parsedData = [];
+
+    // Parse stringified JSON
+    if (typeof data === "string") {
+      parsedData = JSON.parse(data);
+    } else if (Array.isArray(data)) {
+      parsedData = data;
+    }
+
+    // Convert testStructureDescription if string
+    const parsedStructure = Array.isArray(testStructureDescription)
+      ? testStructureDescription
+      : typeof testStructureDescription === "string"
+      ? JSON.parse(testStructureDescription)
+      : [testStructureDescription];
+
+    // 🔥 Handle multiple uploaded files (like image_0, image_1, etc.)
+    if (req.files && req.files.length > 0) {
+      req.files.forEach((file) => {
+        // filename example: "image_0", "image_1"
+        const match = file.fieldname.match(/image_(\d+)/);
+        if (match) {
+          const index = parseInt(match[1]);
+          if (parsedData[index]) {
+            parsedData[index].image = `public/uploads/${file.filename}`;
+          }
+        }
+      });
+    }
+
+    // Upsert (update existing or insert new)
+    const kangarooData = await KangarooModel.findOneAndUpdate(
+      {},
+      {
+        testPrepDescription,
+        testStructureDescription: parsedStructure,
+        data: parsedData,
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Kangaroo test data saved successfully",
+      data: kangarooData,
+    });
+  } catch (error) {
+    console.error("Error saving Kangaroo test:", error);
+    next(error);
   }
 };

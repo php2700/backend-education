@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { addBanner, addBlog, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addTutoring, addWhyChoose, deleteBanner, deleteBlog, deleteOffer, deletePlan, deletePricing, deleteStory, deleteTrust, deleteTutoring, deleteWhyChoose, editBanner, editBlog, editOffer, editPlan, editPricing, editStory, editTrust, editTutoring, editWhyChoose, Login, upsertAboutIsee, upsertRegistration, upsertTestPrep, upsetMathTest } from "../Controller/adminController.js";
+import { addBanner, addBlog, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteOffer, deletePlan, deletePricing, deleteStory, deleteTrust, deleteWhyChoose, editBanner, editBlog, editOffer, editPlan, editPricing, editStory, editTrust, editWhyChoose, Login, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCommonCore, upsertCommonLanguageArt, upsertCompetition, upsertKangaroo, upsertRegistration, upsertTutoring, upsetMathTest } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
-import { getAboutIsee, getBanner, getBlog, getFooterBanner, getMathTest, getOffer, getPlan, getPricing, getRegistration, getStory, getTestPrep, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCommonCore, getCommonLanguageArt, getCompetition, getFooterBanner, getKangaroo, getMathTest, getOffer, getPlan, getPricing, getRegistration, getStory, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
 
 
 const adminRouter = Router();
@@ -69,10 +69,22 @@ adminRouter.post("/math-test", authentication, authorization(['admin']), upsetMa
 adminRouter.get("/math-test", authentication, authorization(['admin']), getMathTest)
 
 /*---------------------tutoring  -----------------------*/
-adminRouter.post("/tutoring", authentication, authorization(['admin']), addTutoring)
-adminRouter.patch("/tutoring", authentication, authorization(['admin']), editTutoring)
+adminRouter.post("/tutoring", authentication, authorization(['admin']), upsertTutoring)
 adminRouter.get("/tutoring", authentication, authorization(['admin']), getTutoring)
-adminRouter.delete("/tutoring/:id", authentication, authorization(['admin']), deleteTutoring)
+
+/*---------------------chapter  -----------------------*/
+adminRouter.post("/chapter", authentication, authorization(['admin']), upsertChapter)
+adminRouter.get("/chapter", authentication, authorization(['admin']), getChapter)
+
+
+/*---------------------competition  -----------------------*/
+adminRouter.post("/competition", authentication, authorization(['admin']), upsertCompetition)
+adminRouter.get("/competition", authentication, authorization(['admin']), getCompetition)
+
+/*---------------------math kangaroo test prep   -----------------------*/
+adminRouter.post("/kangaroo-test", authentication, authorization(['admin']),upload.any("image"), upsertKangaroo )
+adminRouter.get("/kangaroo-test", authentication, authorization(['admin']), getKangaroo )
+
 
 /*======================blog maa amc  ===========================*/
 adminRouter.post("/blog", authentication, authorization(['admin']), upload.single("image"), addBlog)
@@ -90,9 +102,17 @@ adminRouter.get("/registration", authentication, authorization(['admin']), getRe
 adminRouter.post("/about-isee", authentication, authorization(['admin']), upsertAboutIsee)
 adminRouter.get("/about-isee", authentication, authorization(['admin']), getAboutIsee)
 
+/*--------------------all you need to know about ela---------------*/
+adminRouter.post("/about-ela", authentication, authorization(['admin']), upsertAboutEla)
+adminRouter.get("/about-ela", authentication, authorization(['admin']), getAboutEla)
 
-/*--------------------all about isee prep---------------*/
-adminRouter.post("/test-prep", authentication, authorization(['admin']), upsertTestPrep)
-adminRouter.get("/test-prep", authentication, authorization(['admin']), getTestPrep)
+/*--------------------abount common core  ela---------------*/
+adminRouter.post("/about-core-ela", authentication, authorization(['admin']), upsertCommonCore)
+adminRouter.get("/about-core-ela", authentication, authorization(['admin']), getCommonCore)
+
+/*--------------------common core english language and arts---------------*/
+adminRouter.post("/common-language-art", authentication, authorization(['admin']), upsertCommonLanguageArt)
+adminRouter.get("/common-language-art", authentication, authorization(['admin']), getCommonLanguageArt)
+
 
 export default adminRouter

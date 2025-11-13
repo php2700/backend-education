@@ -1,19 +1,28 @@
 import mongoose from "mongoose";
 
 const tutoringSchema = new mongoose.Schema({
-   
-    title: {
+    heading: {
         type: String,
         required: true,
     },
-    description: {
+    headingDescription: {
         type: String,
         required: true,
     },
-    chapter: {
-        type: [String],
-        required: true
-    }
+    chapter: [{
+        title: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
+        chapterName: {
+            type: [String],
+            required: true
+        }
+    }]
 }, {
     timestamps: true
 })

@@ -1,14 +1,19 @@
+import AboutElaModel from "../Models/aboutElaModel.js";
 import AboutIseeModel from "../Models/aboutIseeModel.js";
 import BannerModel from "../Models/bannerModel.js";
 import BlogModel from "../Models/blogModel.js";
+import ChapterModel from "../Models/chapterModel.js";
+import CommonCoreModel from "../Models/commonCoreModel.js";
+import CommonLanguageModel from "../Models/commonLanguageModel.js";
+import CompetitionModel from "../Models/competitionModel.js";
 import FooterBannerModel from "../Models/footerBannerModel.js";
+import KangarooModel from "../Models/kangarooModel.js";
 import MathTestModel from "../Models/mathTestModel.js";
 import OfferModel from "../Models/offerModel.js";
 import PlanModel from "../Models/planModel.js";
 import PricingModel from "../Models/pricingModel.js";
 import RegistrationModel from "../Models/registrationModel.js";
 import StoryModel from "../Models/successStoryModel.js";
-import TestPrepModel from "../Models/testPrepModel.js";
 import TrustModel from "../Models/trustModel.js";
 import TutoringModel from "../Models/tutoringModel.js";
 import WhyChooseModel from "../Models/whyChooseModel.js";
@@ -130,10 +135,112 @@ export const getAboutIsee = async (req, res, next) => {
   }
 };
 
-export const getTestPrep = async (req, res, next) => {
+
+export const getAboutEla = async (req, res, next) => {
   try {
-    const getTestPrepData = await TestPrepModel.findOne()
+    const getTestPrepData = await AboutElaModel.findOne()
     res.json({ data: getTestPrepData });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const getCommonCore = async (req, res, next) => {
+  try {
+    const data = await CommonCoreModel.findOne();
+
+    if (!data) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No data found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "CommonCore data fetched successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const getCommonLanguageArt = async (req, res, next) => {
+  try {
+    const data = await CommonLanguageModel.findOne();
+
+    if (!data) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No language data found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Language data fetched successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getChapter = async (req, res, next) => {
+  try {
+    const data = await ChapterModel.findOne();
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: "No chapter data found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Chapter data fetched successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCompetition = async (req, res, next) => {
+  try {
+    const data = await CompetitionModel.findOne();
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: " no competition data found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "competition data fetched successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const getKangaroo = async (req, res, next) => {
+  try {
+    const kangarooData = await KangarooModel.findOne();
+    if (!kangarooData) {
+      return res.status(404).json({
+        success: false,
+        message: "No Kangaroo test data found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: kangarooData,
+    });
   } catch (error) {
     next(error)
   }
