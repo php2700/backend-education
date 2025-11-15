@@ -9,22 +9,6 @@ const kangarooSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-    data: [
-        {
-            title: {
-                type: String,
-                required: true,
-            },
-            image: {
-                type: String,
-                required: true,
-            },
-            points: {
-                type: [String],
-                required: true,
-            }
-        }
-    ]
 }, {
     timestamps: true
 })

@@ -17,11 +17,15 @@ import BlogModel from '../Models/blogModel.js';
 import RegistrationModel from '../Models/registrationModel.js';
 import AboutIseeModel from '../Models/aboutIseeModel.js';
 import AboutElaModel from '../Models/aboutElaModel.js';
-import CommonCoreModel from '../Models/commonCoreModel.js';
-import CommonLanguageModel from '../Models/commonLanguageModel.js';
 import ChapterModel from '../Models/chapterModel.js';
 import CompetitionModel from '../Models/competitionModel.js';
 import KangarooModel from '../Models/kangarooModel.js';
+import KangarooDetailModel from '../Models/kangarooDetailModel.js';
+import ScienceDetailModel from '../Models/scienceDetailModel.js';
+import ScienceModel from '../Models/scienceModel.js';
+import AboutCoreElaModel from '../Models/aboutCoreElaModel.js';
+import AboutElaDetailModel from '../Models/ElaDetailModel.js';
+import LanguageModel from '../Models/languageModel.js';
 
 const checkPassword = async (password, hashPassword) => {
   const verifyPassword = await bcrypt.compare(password, hashPassword);
@@ -768,7 +772,7 @@ export const upsertAboutIsee = async (req, res, next) => {
   try {
     const { title, purpose, testStructure } = req.body;
 
-    if (!title || !purpose || !testStructure  ) {
+    if (!title || !purpose || !testStructure) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -832,57 +836,6 @@ export const upsertAboutEla = async (req, res, next) => {
   }
 };
 
-
-export const upsertCommonCore = async (req, res, next) => {
-  try {
-    const { description, coverDescription, heading } = req.body;
-
-    if (!description || !coverDescription || !heading) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
-    }
-
-    const updatedCommonCore = await CommonCoreModel.findOneAndUpdate(
-      {},
-      { description, coverDescription, heading },
-      { new: true, upsert: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "CommonCore data saved successfully",
-      data: updatedCommonCore,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const upsertCommonLanguageArt = async (req, res, next) => {
-  try {
-    const { description, heading } = req.body;
-
-    if (!description || !heading) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields are required" });
-    }
-    const updatedLanguage = await CommonLanguageModel.findOneAndUpdate(
-      {},
-      { description, heading },
-      { new: true, upsert: true }
-    );
-    res.status(200).json({
-      success: true,
-      message: "Language data saved successfully",
-      data: updatedLanguage,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const upsertChapter = async (req, res, next) => {
   try {
     const { title, description, subjectDescription, chapterName } = req.body;
@@ -912,14 +865,14 @@ export const upsertChapter = async (req, res, next) => {
 
 export const upsertCompetition = async (req, res) => {
   try {
-    const { description, title, condition, competition,whyTake } = req.body;
+    const { description, title, condition, competition, whyTake } = req.body;
     const competitionData = await CompetitionModel.findOneAndUpdate(
       {},
       {
         description,
         title,
         condition,
-        competition,whyTake
+        competition, whyTake
       },
       {
         new: true,
@@ -939,61 +892,396 @@ export const upsertCompetition = async (req, res) => {
 };
 
 
+
 export const upsertKangaroo = async (req, res, next) => {
   try {
-    const { testPrepDescription, testStructureDescription, data } = req.body;
-    let parsedData = [];
+    const { testPrepDescription, testStructureDescription } = req.body;
 
-    // Parse stringified JSON
-    if (typeof data === "string") {
-      parsedData = JSON.parse(data);
-    } else if (Array.isArray(data)) {
-      parsedData = data;
-    }
-
-    // Convert testStructureDescription if string
-    const parsedStructure = Array.isArray(testStructureDescription)
-      ? testStructureDescription
-      : typeof testStructureDescription === "string"
-      ? JSON.parse(testStructureDescription)
-      : [testStructureDescription];
-
-    // 🔥 Handle multiple uploaded files (like image_0, image_1, etc.)
-    if (req.files && req.files.length > 0) {
-      req.files.forEach((file) => {
-        // filename example: "image_0", "image_1"
-        const match = file.fieldname.match(/image_(\d+)/);
-        if (match) {
-          const index = parseInt(match[1]);
-          if (parsedData[index]) {
-            parsedData[index].image = `public/uploads/${file.filename}`;
-          }
-        }
-      });
-    }
-
-    // Upsert (update existing or insert new)
     const kangarooData = await KangarooModel.findOneAndUpdate(
       {},
       {
         testPrepDescription,
-        testStructureDescription: parsedStructure,
-        data: parsedData,
+        testStructureDescription,
       },
       {
         new: true,
         upsert: true,
-        setDefaultsOnInsert: true,
+        setDefaultsOnInsert: true
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Kangaroo test data saved successfully",
       data: kangarooData,
     });
+
   } catch (error) {
     console.error("Error saving Kangaroo test:", error);
     next(error);
+  }
+};
+
+
+export const postKangaroo = async (req, res, next) => {
+  try {
+    const { title, description } = req.body;
+    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+
+    const imagePath = `public/uploads/${req.file.filename}`
+    const newData = new KangarooDetailModel({
+      image: imagePath,
+      title,
+      description: JSON.parse(description)
+    });
+
+    await newData.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Kangaroo detail created successfully",
+      data: newData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const editKangaroo = async (req, res, next) => {
+  try {
+    const { id, title, description } = req.body;
+
+    const item = await KangarooDetailModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    if (req.file) {
+      if (item.image) {
+        const oldPath = path.join("public", item.image);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+      item.image = `public/uploads/${req.file.filename}`;
+    }
+
+    item.title = title;
+    item.description = JSON.parse(description)
+    await item.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Kangaroo detail updated successfully",
+      data: item,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteKangaroo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await KangarooDetailModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    await KangarooDetailModel.findByIdAndDelete(id);
+    if (item.image) {
+      const imagePath = path.resolve(item.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+    res.status(200).json({
+      success: true,
+      message: "Kangaroo detail deleted successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const upsertScience = async (req, res, next) => {
+  try {
+    const { description, tutorDescription } = req.body;
+
+    const scienceData = await ScienceModel.findOneAndUpdate(
+      {},
+      {
+        description,
+        tutorDescription,
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "science data saved successfully",
+      data: scienceData,
+    });
+
+  } catch (error) {
+    console.error("Error saving science:", error);
+    next(error);
+  }
+};
+
+
+export const postScience = async (req, res, next) => {
+  try {
+    const { title, description, heading } = req.body;
+    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+
+    const imagePath = `public/uploads/${req.file.filename}`
+    const newData = new ScienceDetailModel({
+      image: imagePath,
+      title,
+      description, heading
+    });
+
+    await newData.save();
+
+    res.status(201).json({
+      success: true,
+      message: "science detail created successfully",
+      data: newData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const editScience = async (req, res, next) => {
+  try {
+    const { id, title, description, heading } = req.body;
+
+    const item = await ScienceDetailModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    if (req.file) {
+      if (item.image) {
+        const oldPath = path.join("public", item.image);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+      item.image = `public/uploads/${req.file.filename}`;
+    }
+
+    item.title = title || item?.title
+    item.description = description || item.description
+    item.heading = heading || item.heading
+    await item.save();
+
+    res.status(200).json({
+      success: true,
+      message: "science detail updated successfully",
+      data: item,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteScienceDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await ScienceDetailModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    await ScienceDetailModel.findByIdAndDelete(id);
+    if (item.image) {
+      const imagePath = path.resolve(item.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+    res.status(200).json({
+      success: true,
+      message: "science detail deleted successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const upsertCoreEla = async (req, res, next) => {
+  try {
+    const { coreDescription, coverDescription } = req.body;
+
+    const aboutCoreElaData = await AboutCoreElaModel.findOneAndUpdate(
+      {},
+      {
+        coreDescription, coverDescription
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "aboutCoreEla data saved successfully",
+      data: aboutCoreElaData,
+    });
+
+  } catch (error) {
+    console.error("Error saving science:", error);
+    next(error);
+  }
+};
+
+
+export const postCoreEla = async (req, res, next) => {
+  try {
+    const { title } = req.body;
+    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+
+    const imagePath = `public/uploads/${req.file.filename}`
+    const newData = new AboutElaDetailModel({
+      image: imagePath,
+      title,
+    });
+
+    await newData.save();
+
+    res.status(201).json({
+      success: true,
+      message: "about Ela  detail created successfully",
+      data: newData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const editCoreEla = async (req, res, next) => {
+  try {
+    const { id, title } = req.body;
+
+    const item = await AboutElaDetailModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    if (req.file) {
+      if (item.image) {
+        const oldPath = path.join("public", item.image);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+      item.image = `public/uploads/${req.file.filename}`;
+    }
+
+    item.title = title || item?.title
+    await item.save();
+
+    res.status(200).json({
+      success: true,
+      message: "about Ela  detail detail updated successfully",
+      data: item,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteCoreElaDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await AboutElaDetailModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    await AboutElaDetailModel.findByIdAndDelete(id);
+    if (item.image) {
+      const imagePath = path.resolve(item.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+    res.status(200).json({
+      success: true,
+      message: "about ela detail deleted successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const upsertLanguage = async (req, res, next) => {
+  try {
+    const { heading, description, property1, property2, property3, property4, property5 } = req.body;
+    let imagePath;
+    if (req.file)
+      imagePath = `public/uploads/${req.file.filename}`;
+
+    const existingLanguage = await LanguageModel.findOne();
+
+    if (existingLanguage) {
+      if (imagePath) {
+        if (existingLanguage.image && fs.existsSync(path.join(process.cwd(), existingLanguage.image))) {
+          fs.unlinkSync(path.join(process.cwd(), existingLanguage.image));
+        }
+        existingLanguage.image = imagePath;
+      }
+
+      existingLanguage.heading = heading;
+      existingLanguage.description = description;
+      existingLanguage.property1 = property1;
+      existingLanguage.property2 = property2;
+      existingLanguage.property3 = property3;
+      existingLanguage.property4 = property4;
+      existingLanguage.property5 = property5;
+
+
+      await existingLanguage.save();
+      return res.status(200).json({
+        success: true,
+        message: "language updated successfully",
+        data: existingLanguage,
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "image is required for creating new data" });
+    }
+
+    const newLanguage = await LanguageModel.create({
+      description,heading,
+      image: imagePath, property1, property2, property3, property4, property5
+    });
+    await newLanguage.save();
+
+    res.status(201).json({
+      success: true,
+      message: "language created successfully",
+      data: newLanguage,
+    });
+
+
+  } catch (err) {
+    next(err);
   }
 };
