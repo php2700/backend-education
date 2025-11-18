@@ -102,8 +102,8 @@ adminRouter.get("/science-detail", authentication, authorization(['admin']), get
 adminRouter.delete("/science-detail/:id", authentication, authorization(['admin']), deleteScienceDetail)
 
 /*======================blog maa amc  ===========================*/
-adminRouter.post("/blog", authentication, authorization(['admin']), upload.single("image"), addBlog)
-adminRouter.patch("/blog", authentication, authorization(['admin']), upload.single("image"), editBlog)
+adminRouter.post("/blog", authentication, authorization(['admin']), upload.fields([{ name: "image", maxCount: 1 }, { name: "video", maxCount: 1 }]), addBlog)
+adminRouter.patch("/blog", authentication, authorization(['admin']), upload.fields([{ name: "image", maxCount: 1 }, { name: "video", maxCount: 1 }]), editBlog)
 adminRouter.get("/blog", authentication, authorization(['admin']), getBlog)
 adminRouter.delete("/blog/:id", authentication, authorization(['admin']), deleteBlog)
 
@@ -120,7 +120,7 @@ adminRouter.get("/core-ela-detail", authentication, authorization(['admin']), ge
 adminRouter.delete("/core-ela-detail/:id", authentication, authorization(['admin']), deleteCoreElaDetail)
 
 /*---------------------language and arts -----------------------*/
-adminRouter.post("/language", authentication, authorization(['admin']),upload.single("image"), upsertLanguage)
+adminRouter.post("/language", authentication, authorization(['admin']), upload.single("image"), upsertLanguage)
 adminRouter.get("/language", authentication, authorization(['admin']), getLanguage)
 
 /*--------------------registration details---------------*/

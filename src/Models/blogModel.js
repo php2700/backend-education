@@ -3,7 +3,16 @@ import mongoose from "mongoose";
 const blogSchema = new mongoose.Schema({
     image: {
         type: String,
-        required: true
+        required: false
+    },
+    video: {
+        type: String,
+        required: false
+    },
+    type: {
+        type: String,
+        enum: ['video', 'image'],
+        default: 'image'
     },
     title: {
         type: String,

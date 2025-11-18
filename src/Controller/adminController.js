@@ -674,16 +674,40 @@ export const upsertTutoring = async (req, res, next) => {
 
 export const addBlog = async (req, res, next) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, type } = req.body;
 
     if (!title || !description) return res.status(400).json({ success: false, message: "All field is required" });
-    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+    let imagePath = null;
+    let videoPath = null;
 
-    const imagePath = `public/uploads/${req.file.filename}`
+
+    if (type === "image") {
+      if (!req.files?.image) {
+        return res.status(400).json({
+          success: false,
+          message: "Image is required when type is image",
+        });
+      }
+      imagePath = `public/uploads/${req.files.image[0].filename}`;
+    }
+
+    if (type === "video") {
+      if (!req.files?.video) {
+        return res.status(400).json({
+          success: false,
+          message: "Video is required when type is video",
+        });
+      }
+      videoPath = `public/uploads/${req.files.video[0].filename}`;
+    }
+
+
     const blog = new BlogModel({
       title,
       description,
+      type,
       image: imagePath,
+      video: videoPath
     });
     await blog.save();
     res.status(201).json({ message: "blog added successfully", data: blog });
@@ -694,30 +718,52 @@ export const addBlog = async (req, res, next) => {
 
 export const editBlog = async (req, res, next) => {
   try {
-
-    const { title, description, _id } = req.body;
+    const { title, description, type, _id } = req.body;
 
     const blogData = await BlogModel.findById(_id);
-    if (!blogData)
-      return res.status(404).json({ success: false, message: "blog data not found" });
+    if (!blogData) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+    if (req.files?.image?.length > 0) {
+      const newImage = `public/uploads/${req.files.image[0].filename}`;
 
-    if (req.file) {
       if (blogData.image) {
         const oldPath = path.join("public", blogData.image);
         if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
       }
-      blogData.image = `public/uploads/${req.file.filename}`;
+
+      blogData.image = newImage;
+      blogData.video = null;
     }
 
+    if (req.files?.video?.length > 0) {
+      const newVideo = `public/uploads/${req.files.video[0].filename}`;
+
+      if (blogData.video) {
+        const oldPath = path.join("public", blogData.video);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+
+      blogData.video = newVideo;
+      blogData.image = null;
+    }
+
+    // Update fields
+    blogData.type = type || blogData.type;
     blogData.title = title || blogData.title;
     blogData.description = description || blogData.description;
+
     await blogData.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "blogData updated successfully",
+      message: "Blog updated successfully",
       data: blogData,
     });
+
   } catch (error) {
     next(error);
   }
@@ -730,8 +776,9 @@ export const deleteBlog = async (req, res, next) => {
     const blogData = await BlogModel.findById(id);
     if (!blogData) return res.status(404).json({ success: false, message: "blogData not found" });
     await BlogModel.findByIdAndDelete(id);
-    if (blogData.image) {
-      const imagePath = path.resolve(blogData.image);
+    if (blogData.image || blogData.video) {
+      const name = blogData.image || blogData.video;
+      const imagePath = path.resolve(name);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }
@@ -1269,7 +1316,7 @@ export const upsertLanguage = async (req, res, next) => {
     }
 
     const newLanguage = await LanguageModel.create({
-      description,heading,
+      description, heading,
       image: imagePath, property1, property2, property3, property4, property5
     });
     await newLanguage.save();
