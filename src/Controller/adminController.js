@@ -61,14 +61,36 @@ export const Login = async (req, res, next) => {
   }
 }
 
-
 export const addBanner = async (req, res, next) => {
   try {
     const { title, description } = req.body;
-    if (!title || !description) return res.status(400).json({ success: false, message: "All field is required" });
-    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+    if (!title || !description)
+      return res.status(400).json({ success: false, message: "All fields are required" });
 
     const imagePath = req.file ? `public/uploads/${req.file.filename}` : null;
+    const existing = await BannerModel.findOne();
+
+    if (existing) {
+      if (req.file && existing.image) {
+        const oldImagePath = path.join(process.cwd(), existing.image);
+
+        fs.unlink(oldImagePath, (err) => {
+          if (err) console.log("Old image delete error:", err);
+        });
+      }
+
+      existing.title = title;
+      existing.description = description;
+      if (imagePath) existing.image = imagePath;
+
+      await existing.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Banner updated successfully",
+        data: existing,
+      });
+    }
 
     const bannerData = await BannerModel.create({
       title,
@@ -78,13 +100,14 @@ export const addBanner = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "banner added successfully",
+      message: "Banner created successfully",
       data: bannerData,
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const editBanner = async (req, res, next) => {
   try {

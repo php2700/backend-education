@@ -69,7 +69,7 @@ export const getOffer = async (req, res, next) => {
 
 export const getBanner = async (req, res, next) => {
   try {
-    const bannerData = await BannerModel.find().sort({ createdAt: -1 });
+    const bannerData = await BannerModel.findOne();
     res.json({ data: bannerData });
   } catch (error) {
     next(error)
