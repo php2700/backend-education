@@ -1,11 +1,15 @@
 import AboutCoreElaModel from "../Models/aboutCoreElaModel.js";
 import AboutElaModel from "../Models/aboutElaModel.js";
 import AboutIseeModel from "../Models/aboutIseeModel.js";
+import AboutModel from "../Models/aboutModel.js";
 import BannerModel from "../Models/bannerModel.js";
 import BlogModel from "../Models/blogModel.js";
 import ChapterModel from "../Models/chapterModel.js";
 import CompetitionModel from "../Models/competitionModel.js";
+import ContactModel from "../Models/contactModel.js";
+import ContactTextModel from "../Models/contactTextModel.js";
 import AboutElaDetailModel from "../Models/ElaDetailModel.js";
+import FaqModel from "../Models/faqModel.js";
 import FooterBannerModel from "../Models/footerBannerModel.js";
 import KangarooDetailModel from "../Models/kangarooDetailModel.js";
 import KangarooModel from "../Models/kangarooModel.js";
@@ -18,6 +22,7 @@ import RegistrationModel from "../Models/registrationModel.js";
 import ScienceDetailModel from "../Models/scienceDetailModel.js";
 import ScienceModel from "../Models/scienceModel.js";
 import StoryModel from "../Models/successStoryModel.js";
+import TestImonialModel from "../Models/testimonialModel.js";
 import TrustModel from "../Models/trustModel.js";
 import TutoringModel from "../Models/tutoringModel.js";
 import WhyChooseModel from "../Models/whyChooseModel.js";
@@ -297,3 +302,98 @@ export const getLanguage = async (req, res, next) => {
     next(err);
   }
 };
+
+
+export const getTestImonial = async (req, res, next) => {
+  try {
+    const data = await TestImonialModel.find().sort({ createdAt: -1 })
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getCotactList = async (req, res, next) => {
+  try {
+    const page = req?.query?.page || 1;
+    const limit = req?.query?.limit || 10;
+    const offset = (page - 1) * limit;
+    const totalItem = await ContactModel.countDocuments();
+    const data = await ContactModel.find().skip(offset).limit(limit).sort({ createdAt: -1 })
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        totalItem,
+        page, limit,
+        totalPages: Math.ceil(totalItem / limit)
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const getContactText = async (req, res, next) => {
+  try {
+    const data = await ContactTextModel.findOne();
+    res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const addContact = async (req, res, next) => {
+  try {
+    const { name, email, mobile, message } = req?.body;
+    if (!name || !email || !mobile || !message) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+
+    const data = await new ContactModel({
+      name, email, mobile, message
+    });
+    await data.save();
+    res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const getAbout = async (req, res, next) => {
+  try {
+
+    const data = await AboutModel.findOne();
+    res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+export const getFaq = async (req, res, next) => {
+  try {
+
+    const data = await FaqModel.find().sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (err) {
+    next(err);
+  }
+}

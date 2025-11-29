@@ -26,6 +26,10 @@ import ScienceModel from '../Models/scienceModel.js';
 import AboutCoreElaModel from '../Models/aboutCoreElaModel.js';
 import AboutElaDetailModel from '../Models/ElaDetailModel.js';
 import LanguageModel from '../Models/languageModel.js';
+import TestImonialModel from '../Models/testimonialModel.js';
+import AboutModel from '../Models/aboutModel.js';
+import FaqModel from '../Models/faqModel.js';
+import ContactTextModel from '../Models/contactTextModel.js';
 
 const checkPassword = async (password, hashPassword) => {
   const verifyPassword = await bcrypt.compare(password, hashPassword);
@@ -1350,6 +1354,269 @@ export const upsertLanguage = async (req, res, next) => {
       data: newLanguage,
     });
 
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const postTestImonial = async (req, res, next) => {
+  try {
+    const { title, description, address } = req.body;
+    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+
+    const imagePath = `public/uploads/${req.file.filename}`
+    const newData = new TestImonialModel({
+      image: imagePath,
+      title, description, address
+    });
+
+    await newData.save();
+
+    res.status(201).json({
+      success: true,
+      message: "testimonial detail created successfully",
+      data: newData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const editTestImonial = async (req, res, next) => {
+  try {
+    const { _id, title, description, address } = req.body;
+
+    const item = await TestImonialModel.findById(_id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    if (req.file) {
+      if (item.image) {
+        const oldPath = path.join("public", item.image);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+      item.image = `public/uploads/${req.file.filename}`;
+    }
+
+    item.title = title || item?.title
+    item.description = description || item?.description
+    item.address = address || item?.address
+    await item.save();
+    res.status(200).json({
+      success: true,
+      message: "testimonial detail updated successfully",
+      data: item,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteTestImonialDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await TestImonialModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    await TestImonialModel.findByIdAndDelete(id);
+    if (item.image) {
+      const imagePath = path.resolve(item.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+    res.status(200).json({
+      success: true,
+      message: "testimonial deleted successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const upsertAbout = async (req, res, next) => {
+  try {
+    const {
+      description,
+      whyUsDescription,
+      howDiffrentDescription,
+      safetyDescription,
+      tutorDescription
+    } = req.body;
+
+    const toArray = (value) => {
+      try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      } catch {
+        return [value];
+      }
+    };
+
+    let imagePath;
+    if (req.file) {
+      imagePath = `public/uploads/${req.file.filename}`;
+    }
+
+    let existingAbout = await AboutModel.findOne();
+
+    // ---------- UPDATE ----------
+    if (existingAbout) {
+      // Replace old image
+      if (imagePath) {
+        if (
+          existingAbout.image &&
+          fs.existsSync(path.join(process.cwd(), existingAbout.image))
+        ) {
+          fs.unlinkSync(path.join(process.cwd(), existingAbout.image));
+        }
+        existingAbout.image = imagePath;
+      }
+
+      existingAbout.description = toArray(description);
+      existingAbout.whyUsDescription = toArray(whyUsDescription);
+      existingAbout.howDiffrentDescription = toArray(howDiffrentDescription);
+      existingAbout.safetyDescription = toArray(safetyDescription);
+      existingAbout.tutorDescription = tutorDescription;
+
+      await existingAbout.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "About updated successfully",
+        data: existingAbout,
+      });
+    }
+
+    // ---------- CREATE ----------
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Image is required for creating new About data",
+      });
+    }
+
+    const newAbout = await AboutModel.create({
+      image: imagePath,
+      description: toArray(description),
+      whyUsDescription: toArray(whyUsDescription),
+      howDiffrentDescription: toArray(howDiffrentDescription),
+      safetyDescription: toArray(safetyDescription),
+      tutorDescription,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "About created successfully",
+      data: newAbout,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const deleteFaqDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await FaqModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+    await FaqModel.findByIdAndDelete(id);
+    res.status(200).json({
+      success: true,
+      message: "faq deleted successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const postFaq = async (req, res, next) => {
+  try {
+    const { title, description,points } = req.body;
+
+    const newData = new FaqModel({
+      title, description, points
+    });
+    await newData.save();
+    res.status(201).json({
+      success: true,
+      message: "faq detail created successfully",
+      data: newData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const addContactText = async (req, res, next) => {
+  try {
+    const { description, mobile, email, address } = req.body;
+
+    if (!description || !mobile || !email || !address) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+
+    const existing = await ContactTextModel.findOne();
+
+    let result;
+
+    if (existing) {
+      existing.description = description;
+      existing.mobile = mobile;
+      existing.email = email;
+      existing.address = address;
+      result = await existing.save();
+    } else {
+      const contactText = new ContactTextModel({
+        description,
+        mobile,address,
+        email,
+      });
+      result = await contactText.save();
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "contact text saved successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editFaq = async (req, res, next) => {
+  try {
+    const { _id, title, description, points } = req.body;
+
+    const item = await FaqModel.findById(_id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    item.title = title || item?.title
+    item.description = description || item?.description
+    item.points = points || item?.points
+    await item.save();
+    res.status(200).json({
+      success: true,
+      message: "faq detail updated successfully",
+      data: item,
+    });
 
   } catch (err) {
     next(err);

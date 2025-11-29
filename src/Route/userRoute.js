@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getCoreEla, getElaDetail, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { addContact, getAbout, getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
 
 const userRouter = Router();
 
@@ -80,5 +80,15 @@ userRouter.get("/about-isee-test", getAboutIsee)
 
 /*--------------------registration details---------------*/
 userRouter.get("/registration", getRegistration)
+
+
+/*--------contact-----*/
+userRouter.get("/contact", getContactText)
+userRouter.post("/contact", addContact)
+
+userRouter.get("/about", getAbout);
+userRouter.get("/faq", getFaq);
+userRouter.get("/testImonial", getTestImonial)
+
 
 export default userRouter;

@@ -1,15 +1,18 @@
 import { Router } from "express";
-import { addBanner, addBlog, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTrust, editWhyChoose, Login, postCoreEla, postKangaroo, postScience, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest } from "../Controller/adminController.js";
+import { addBanner, addBlog, addContactText, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
-import { getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getCoreEla, getElaDetail, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { getAbout, getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getCotactList, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
 
 
 const adminRouter = Router();
 
 
 adminRouter.post('/login', Login)
+
+adminRouter.post("/adminData/:id", authentication, authorization(['admin']),  addBanner)
+
 
 /*------------------- banner-------- */
 adminRouter.post("/banner", authentication, authorization(['admin']), upload.single("image"), addBanner)
@@ -135,5 +138,27 @@ adminRouter.get("/about-isee", authentication, authorization(['admin']), getAbou
 /*--------------------all you need to know about ela---------------*/
 adminRouter.post("/about-ela", authentication, authorization(['admin']), upsertAboutEla)
 adminRouter.get("/about-ela", authentication, authorization(['admin']), getAboutEla)
+
+
+/*=============testImonial================*/
+adminRouter.post("/testImonial", authentication, authorization(['admin']), upload.single("image"), postTestImonial)
+adminRouter.patch("/testImonial", authentication, authorization(['admin']), upload.single("image"), editTestImonial)
+adminRouter.get("/testImonial", authentication, authorization(['admin']), getTestImonial)
+adminRouter.delete("/testImonial/:id", authentication, authorization(['admin']), deleteTestImonialDetail)
+
+/*=============contact list================*/
+adminRouter.get("/contact", authentication, authorization(['admin']), getContactText)
+adminRouter.post("/contact", authentication, authorization(['admin']), addContactText)
+adminRouter.get("/contact-list", authentication, authorization(['admin']), getCotactList)
+
+/*=============about us================*/
+adminRouter.post("/about", authentication, authorization(['admin']), upload.single("image"), upsertAbout)
+adminRouter.get("/about", authentication, authorization(['admin']), getAbout);
+
+/*=============faq================*/
+adminRouter.post("/faq", authentication, authorization(['admin']), postFaq)
+adminRouter.get("/faq", authentication, authorization(['admin']), getFaq);
+adminRouter.patch("/faq", authentication, authorization(['admin']), editFaq)
+adminRouter.delete("/faq/:id", authentication, authorization(['admin']), deleteFaqDetail)
 
 export default adminRouter
