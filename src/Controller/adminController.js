@@ -30,6 +30,9 @@ import TestImonialModel from '../Models/testimonialModel.js';
 import AboutModel from '../Models/aboutModel.js';
 import FaqModel from '../Models/faqModel.js';
 import ContactTextModel from '../Models/contactTextModel.js';
+import TermsModel from '../Models/TermsModel.js';
+import ManagementModel from '../Models/managementModel.js';
+
 
 const checkPassword = async (password, hashPassword) => {
   const verifyPassword = await bcrypt.compare(password, hashPassword);
@@ -1620,5 +1623,149 @@ export const editFaq = async (req, res, next) => {
 
   } catch (err) {
     next(err);
+  }
+};
+
+
+
+
+// GET ALL TERMS
+export const getTerms = async (req, res) => {
+  try {
+    const terms = await TermsModel.find().sort({ createdAt: 1 });
+    res.status(200).json({ success: true, data: terms });
+  } catch (error) {
+    console.error("Error in getTerms:", error); // Console log error for debugging
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// CREATE NEW TERM SECTION
+export const createTerm = async (req, res) => {
+  try {
+    const { title, description, points } = req.body;
+    
+    // Validation check
+    if (!title) {
+        return res.status(400).json({ success: false, message: "Title is required" });
+    }
+
+    const newTerm = new TermsModel({
+      title,
+      description,
+      points
+    });
+
+    await newTerm.save();
+    res.status(201).json({ success: true, data: newTerm });
+  } catch (error) {
+    console.error("Error in createTerm:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// UPDATE TERM SECTION
+export const updateTerm = async (req, res) => {
+  try {
+    const { _id, title, description, points } = req.body;
+    
+    const updatedTerm = await TermsModel.findByIdAndUpdate(
+      _id,
+      { title, description, points },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, data: updatedTerm });
+  } catch (error) {
+    console.error("Error in updateTerm:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// DELETE TERM SECTION
+export const deleteTerm = async (req, res) => {
+  try {
+    await TermsModel.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteTerm:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export const getMembers = async (req, res) => {
+  try {
+    const members = await ManagementModel.find().sort({ order: 1, createdAt: 1 });
+    res.status(200).json({ success: true, data: members });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ADD MEMBER
+export const addMember = async (req, res) => {
+  try {
+    const { name, role, description, order } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "Image is required" });
+    }
+
+    // ✅ CHANGE: Sirf path save kar rahe hain (e.g., "uploads/image.png")
+    // .replace(/\\/g, "/") Windows ke backslashes ko forward slash me badalne ke liye hai
+    const imagePath = req.file.path.replace(/\\/g, "/");
+
+    const newMember = new ManagementModel({
+      name,
+      role,
+      description,
+      image: imagePath, // Ab DB me relative path save hoga
+      order: order || 0
+    });
+
+    await newMember.save();
+    res.status(201).json({ success: true, data: newMember });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// UPDATE MEMBER
+export const updateMember = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, role, description, order } = req.body;
+
+    const member = await ManagementModel.findById(id);
+    if (!member) return res.status(404).json({ success: false, message: "Member not found" });
+
+    let updatedData = { name, role, description, order };
+
+    if (req.file) {
+      // ✅ CHANGE: New image path
+      updatedData.image = req.file.path.replace(/\\/g, "/");
+    }
+
+    const updatedMember = await ManagementModel.findByIdAndUpdate(
+      id,
+      updatedData,
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, data: updatedMember });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// DELETE MEMBER
+export const deleteMember = async (req, res) => {
+  try {
+    await ManagementModel.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addBanner, addBlog, addContactText, addFooterBanner, addOffer, addPlan, addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest } from "../Controller/adminController.js";
+import { addBanner, addBlog, addContactText, addFooterBanner, addOffer, addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
@@ -160,5 +160,26 @@ adminRouter.post("/faq", authentication, authorization(['admin']), postFaq)
 adminRouter.get("/faq", authentication, authorization(['admin']), getFaq);
 adminRouter.patch("/faq", authentication, authorization(['admin']), editFaq)
 adminRouter.delete("/faq/:id", authentication, authorization(['admin']), deleteFaqDetail)
+
+
+
+
+
+
+adminRouter.get('/terms',authentication, authorization(['admin']), getTerms);
+adminRouter.post('/terms', authentication, authorization(['admin']),createTerm); 
+adminRouter.patch('/terms',authentication, authorization(['admin']), updateTerm); 
+adminRouter.delete('/terms/:id',authentication, authorization(['admin']), deleteTerm);
+
+
+adminRouter.get('/management',authentication, authorization(['admin']), getMembers); 
+
+// POST: upload.single('image') handles the file
+adminRouter.post('/management',authentication, authorization(['admin']), upload.single('image'), addMember); 
+
+// PATCH: upload.single('image') handles file if user updates it
+adminRouter.patch('/management/:id',authentication, authorization(['admin']), upload.single('image'), updateMember); 
+
+adminRouter.delete('/management/:id',authentication, authorization(['admin']), deleteMember);
 
 export default adminRouter

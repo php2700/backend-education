@@ -26,6 +26,10 @@ import TestImonialModel from "../Models/testimonialModel.js";
 import TrustModel from "../Models/trustModel.js";
 import TutoringModel from "../Models/tutoringModel.js";
 import WhyChooseModel from "../Models/whyChooseModel.js";
+import TermsModel from '../Models/TermsModel.js';
+import ManagementModel from '../Models/managementModel.js';
+
+
 
 export const getWhyChoose = async (req, res, next) => {
   try {
@@ -315,6 +319,15 @@ export const getTestImonial = async (req, res, next) => {
     next(err);
   }
 };
+export const getTerms = async (req, res) => {
+  try {
+    const terms = await TermsModel.find().sort({ createdAt: 1 });
+    res.status(200).json({ success: true, data: terms });
+  } catch (error) {
+    console.error("Error in getTerms:", error); // Console log error for debugging
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export const getCotactList = async (req, res, next) => {
   try {
@@ -397,3 +410,11 @@ export const getFaq = async (req, res, next) => {
     next(err);
   }
 }
+export const getMembers = async (req, res) => {
+  try {
+    const members = await ManagementModel.find().sort({ order: 1, createdAt: 1 });
+    res.status(200).json({ success: true, data: members });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
