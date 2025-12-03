@@ -40,6 +40,8 @@ import ElaTest from "../Models/ElaDetailModel.js"
 import ScatTest from "../Models/ScatTestModel.js"
 import AmcTest from "../Models/AmcTestModel.js"
 import MathKangarooTest from "../Models/MathKangarooTestModel.js";
+import ActTest from "../Models/ActTestModel.js"
+import CogatTest from "../Models/CogatTestModel.js";
 
 
 
@@ -2149,6 +2151,92 @@ export const deleteMathKangarooData = async (req, res) => {
     });
   } catch (error) {
     console.error("Error deleting Math Kangaroo data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getActData = async (req, res) => {
+  try {
+    const data = await ActTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ACT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveActData = async (req, res) => {
+  try {
+    const updatedData = await ActTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "ACT Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving ACT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteActData = async (req, res) => {
+  try {
+    await ActTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All ACT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting ACT data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getCogatData = async (req, res) => {
+  try {
+    const data = await CogatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching CogAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveCogatData = async (req, res) => {
+  try {
+    const updatedData = await CogatTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "CogAT Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving CogAT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteCogatData = async (req, res) => {
+  try {
+    await CogatTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All CogAT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting CogAT data:", error);
     res.status(500).json({ message: "Delete Failed", error });
   }
 };

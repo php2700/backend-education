@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addBanner, addBlog, addContactText, addFooterBanner, getAmcData ,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
+import { addBanner, addBlog, addContactText, addFooterBanner,getCogatData ,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
@@ -226,6 +226,18 @@ adminRouter.delete("/amc-test",authentication, authorization(['admin']), deleteA
 adminRouter.get("/math-kangaroo-test",authentication, authorization(['admin']), getMathKangarooData);
 adminRouter.post("/math-kangaroo-test",authentication, authorization(['admin']), saveMathKangarooData);
 adminRouter.delete("/math-kangaroo-test",authentication, authorization(['admin']), deleteMathKangarooData);
+
+/*=============ACT================*/  
+
+adminRouter.get("/act-test",authentication, authorization(['admin']), getActData);
+adminRouter.post("/act-test", authentication, authorization(['admin']),saveActData);
+adminRouter.delete("/act-test",authentication, authorization(['admin']), deleteActData);
+
+/*=============ACT================*/  
+
+adminRouter.get("/cogat-test",authentication, authorization(['admin']), getCogatData);
+adminRouter.post("/cogat-test",authentication, authorization(['admin']), saveCogatData);
+adminRouter.delete("/cogat-test",authentication, authorization(['admin']), deleteCogatData);
 
 
 export default adminRouter
