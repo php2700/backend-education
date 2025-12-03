@@ -42,6 +42,10 @@ import AmcTest from "../Models/AmcTestModel.js"
 import MathKangarooTest from "../Models/MathKangarooTestModel.js";
 import ActTest from "../Models/ActTestModel.js"
 import CogatTest from "../Models/CogatTestModel.js";
+import SbacTest from "../Models/SbacTestModel.js"
+import AccuplacerTest from  "../Models/AccuplacerModel.js"
+import StbTest from  "../Models/StbTestModel.js"
+
 
 
 
@@ -2237,6 +2241,132 @@ export const deleteCogatData = async (req, res) => {
     });
   } catch (error) {
     console.error("Error deleting CogAT data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+export const getSbacData = async (req, res) => {
+  try {
+    const data = await SbacTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SBAC data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveSbacData = async (req, res) => {
+  try {
+    const updatedData = await SbacTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "SBAC Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving SBAC data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteSbacData = async (req, res) => {
+  try {
+    await SbacTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All SBAC Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting SBAC data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+export const getAccuplacerData = async (req, res) => {
+  try {
+    const data = await AccuplacerTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching Accuplacer data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveAccuplacerData = async (req, res) => {
+  try {
+    const updatedData = await AccuplacerTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "Accuplacer Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving Accuplacer data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteAccuplacerData = async (req, res) => {
+  try {
+    await AccuplacerTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All Accuplacer Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting Accuplacer data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+export const getStbData = async (req, res) => {
+  try {
+    const data = await StbTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching STB data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveStbData = async (req, res) => {
+  try {
+    const updatedData = await StbTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "STB Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving STB data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteStbData = async (req, res) => {
+  try {
+    await StbTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All STB Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting STB data:", error);
     res.status(500).json({ message: "Delete Failed", error });
   }
 };
