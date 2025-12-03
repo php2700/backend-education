@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addBanner, addBlog, addContactText, addFooterBanner, addOffer, addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
+import { addBanner, addBlog, addContactText, addFooterBanner,getCogatData ,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
@@ -181,5 +181,63 @@ adminRouter.post('/management',authentication, authorization(['admin']), upload.
 adminRouter.patch('/management/:id',authentication, authorization(['admin']), upload.single('image'), updateMember); 
 
 adminRouter.delete('/management/:id',authentication, authorization(['admin']), deleteMember);
+
+
+adminRouter.get("/sat-test", authentication, authorization(['admin']),  getSatData);
+
+adminRouter.post("/sat-test", authentication, authorization(['admin']),  saveSatData);
+
+adminRouter.delete("/sat-test", authentication, authorization(['admin']),  deleteSatData); 
+
+/*=============SSAT================*/
+
+adminRouter.get("/ssat-test",authentication, authorization(['admin']), getSsatData);
+adminRouter.post("/ssat-test",authentication, authorization(['admin']), saveSsatData); // Save aur Update dono yahi karega
+adminRouter.delete("/ssat-test",authentication, authorization(['admin']), deleteSsatData);
+
+/*=============SHSAT================*/ 
+
+adminRouter.get("/shsat-test",authentication, authorization(['admin']),  getShsatData);
+adminRouter.post("/shsat-test", authentication, authorization(['admin']), saveShsatData);
+adminRouter.delete("/shsat-test", authentication, authorization(['admin']), deleteShsatData);
+
+/*=============ISEE================*/ 
+adminRouter.get("/isee-test",  authentication, authorization(['admin']), getIseeData);
+adminRouter.post("/isee-test",authentication, authorization(['admin']), saveIseeData);
+adminRouter.delete("/isee-test",authentication, authorization(['admin']), deleteIseeData);
+
+/*=============ELA================*/ 
+
+adminRouter.get("/ela-test",authentication, authorization(['admin']), getElaData );
+adminRouter.post("/ela-test", authentication, authorization(['admin']), saveElaData);
+adminRouter.delete("/ela-test", authentication, authorization(['admin']), deleteElaData);
+
+/*=============ELA================*/  
+
+adminRouter.get("/scat-test",authentication, authorization(['admin']), getScatData);
+adminRouter.post("/scat-test", authentication, authorization(['admin']),saveScatData);
+adminRouter.delete("/scat-test",authentication, authorization(['admin']), deleteScatData);
+
+
+adminRouter.get("/amc-test",authentication, authorization(['admin']), getAmcData);
+adminRouter.post("/amc-test",authentication, authorization(['admin']), saveAmcData);
+adminRouter.delete("/amc-test",authentication, authorization(['admin']), deleteAmcData);
+
+adminRouter.get("/math-kangaroo-test",authentication, authorization(['admin']), getMathKangarooData);
+adminRouter.post("/math-kangaroo-test",authentication, authorization(['admin']), saveMathKangarooData);
+adminRouter.delete("/math-kangaroo-test",authentication, authorization(['admin']), deleteMathKangarooData);
+
+/*=============ACT================*/  
+
+adminRouter.get("/act-test",authentication, authorization(['admin']), getActData);
+adminRouter.post("/act-test", authentication, authorization(['admin']),saveActData);
+adminRouter.delete("/act-test",authentication, authorization(['admin']), deleteActData);
+
+/*=============ACT================*/  
+
+adminRouter.get("/cogat-test",authentication, authorization(['admin']), getCogatData);
+adminRouter.post("/cogat-test",authentication, authorization(['admin']), saveCogatData);
+adminRouter.delete("/cogat-test",authentication, authorization(['admin']), deleteCogatData);
+
 
 export default adminRouter

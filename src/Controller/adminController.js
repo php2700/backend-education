@@ -32,6 +32,17 @@ import FaqModel from '../Models/faqModel.js';
 import ContactTextModel from '../Models/contactTextModel.js';
 import TermsModel from '../Models/TermsModel.js';
 import ManagementModel from '../Models/managementModel.js';
+import SatTestModel from '../Models/SatTestModel.js';
+import SsatTest from "../Models/SsatTestModel.js";
+import ShsatTest from "../Models/ShsatTestModel.js";
+import IseeTest from "../Models/IseeTestModel.js"
+import ElaTest from "../Models/ElaDetailModel.js"
+import ScatTest from "../Models/ScatTestModel.js"
+import AmcTest from "../Models/AmcTestModel.js"
+import MathKangarooTest from "../Models/MathKangarooTestModel.js";
+import ActTest from "../Models/ActTestModel.js"
+import CogatTest from "../Models/CogatTestModel.js";
+
 
 
 const checkPassword = async (password, hashPassword) => {
@@ -1767,5 +1778,465 @@ export const deleteMember = async (req, res) => {
     res.status(200).json({ success: true, message: "Deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
+// 1. GET API - Data Fetch Karne Ke Liye
+export const getSatData = async (req, res) => {
+  try {
+    // Database se pehla document dhundo
+    const data = await SatTestModel.findOne();
+    
+    // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
+    res.status(200).json({
+      success: true,
+      data: data || null,
+    });
+  } catch (error) {
+    console.error("Error fetching SAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// 2. POST API - Create ya Update (Edit) Karne Ke Liye
+export const saveSatData = async (req, res) => {
+  try {
+    // findOneAndUpdate data ko update karega. 
+    // "upsert: true" ka matlab: Agar data nahi hai to naya bana do.
+    // "new: true" ka matlab: Updated data wapas bhejo.
+    
+    const updatedData = await SatTestModel.findOneAndUpdate(
+      {}, // Empty filter kyunki humein ek hi document chahiye
+      req.body,
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "SAT Page Data Saved Successfully",
+      data: updatedData,
+    });
+  } catch (error) {
+    console.error("Error saving SAT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// 3. DELETE API - Poora Data Delete Karne Ke Liye
+export const deleteSatData = async (req, res) => {
+  try {
+    // Collection se sab kuch uda do
+    await SatTestModel.deleteMany({});
+    
+    res.status(200).json({
+      success: true,
+      message: "All SAT Page Data Deleted Successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting SAT data:", error);
+    res.status(500).json({ message: "Delete Failed", error }); 
+  }
+};
+
+
+
+// --- 1. GET DATA (Read) ---
+export const getSsatData = async (req, res) => {  
+  try {
+    const data = await SsatTest.findOne();
+    // Data bhej do, agar nahi hai to null
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SSAT Data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- 2. SAVE / UPDATE DATA (Create or Edit) ---
+export const saveSsatData = async (req, res) => {
+  try {
+    // findOneAndUpdate: Agar data hai to update, nahi to naya create (upsert: true)
+    const updatedData = await SsatTest.findOneAndUpdate(
+      {}, // Empty filter (single page)
+      req.body, // Frontend se aaya naya data
+      { 
+        new: true, // Return updated doc
+        upsert: true, // Create if not exists
+        setDefaultsOnInsert: true 
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "SSAT Page Updated Successfully",
+      data: updatedData,
+    });
+  } catch (error) {
+    console.error("Error saving SSAT Data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- 3. DELETE DATA ---
+export const deleteSsatData = async (req, res) => {
+  try {
+    await SsatTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All SSAT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting SSAT Data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getShsatData = async (req, res) => {
+  try {
+    const data = await ShsatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SHSAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert Logic) ---
+export const saveShsatData = async (req, res) => {
+  try {
+    // Agar data hai to update karo, nahi to naya banao
+    const updatedData = await ShsatTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "SHSAT Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving SHSAT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteShsatData = async (req, res) => {
+  try {
+    await ShsatTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All SHSAT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting SHSAT data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+
+export const getIseeData = async (req, res) => {
+  try {
+    const data = await IseeTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ISEE data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA ---
+export const saveIseeData = async (req, res) => {
+  try {
+    const updatedData = await IseeTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "ISEE Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving ISEE data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteIseeData = async (req, res) => {
+  try {
+    await IseeTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All ISEE Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting ISEE data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+
+export const getElaData = async (req, res) => {
+  try {
+    const data = await ElaTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ELA data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA ---
+export const saveElaData = async (req, res) => {
+  try {
+    const updatedData = await ElaTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "ELA Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving ELA data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteElaData = async (req, res) => {
+  try {
+    await ElaTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All ELA Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting ELA data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getScatData = async (req, res) => {
+  try {
+    const data = await ScatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SCAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveScatData = async (req, res) => {
+  try {
+    const updatedData = await ScatTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "SCAT Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving SCAT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteScatData = async (req, res) => {
+  try {
+    await ScatTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All SCAT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting SCAT data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getAmcData = async (req, res) => {
+  try {
+    const data = await AmcTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching AMC data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveAmcData = async (req, res) => {
+  try {
+    const updatedData = await AmcTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "AMC Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving AMC data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteAmcData = async (req, res) => {
+  try {
+    await AmcTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All AMC Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting AMC data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getMathKangarooData = async (req, res) => {
+  try {
+    const data = await MathKangarooTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching Math Kangaroo data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveMathKangarooData = async (req, res) => {
+  try {
+    const updatedData = await MathKangarooTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "Math Kangaroo Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving Math Kangaroo data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteMathKangarooData = async (req, res) => {
+  try {
+    await MathKangarooTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All Math Kangaroo Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting Math Kangaroo data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getActData = async (req, res) => {
+  try {
+    const data = await ActTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ACT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveActData = async (req, res) => {
+  try {
+    const updatedData = await ActTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "ACT Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving ACT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteActData = async (req, res) => {
+  try {
+    await ActTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All ACT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting ACT data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const getCogatData = async (req, res) => {
+  try {
+    const data = await CogatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching CogAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveCogatData = async (req, res) => {
+  try {
+    const updatedData = await CogatTest.findOneAndUpdate(
+      {}, 
+      req.body, 
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({ 
+      success: true, 
+      message: "CogAT Page Updated Successfully", 
+      data: updatedData 
+    });
+  } catch (error) {
+    console.error("Error saving CogAT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
+
+// --- DELETE DATA ---
+export const deleteCogatData = async (req, res) => {
+  try {
+    await CogatTest.deleteMany({});
+    res.status(200).json({ 
+      success: true, 
+      message: "All CogAT Data Deleted Successfully" 
+    });
+  } catch (error) {
+    console.error("Error deleting CogAT data:", error);
+    res.status(500).json({ message: "Delete Failed", error });
   }
 };
