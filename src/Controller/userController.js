@@ -34,7 +34,7 @@ import PsatTestModel from "../Models/psatmodel.js"
 import SsatTest from "../Models/SsatTestModel.js";
 import ShsatTest from "../Models/ShsatTestModel.js";
 import IseeTest from "../Models/IseeTestModel.js"
-import ElaTest from "../Models/ElaDetailModel.js"
+import ElaTest from "../Models/ElaTestModel.js"
 import ScatTest from "../Models/ScatTestModel.js"
 import AmcTest from "../Models/AmcTestModel.js"
 import MathKangarooTest from "../Models/MathKangarooTestModel.js";
