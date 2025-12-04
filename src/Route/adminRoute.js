@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addBanner, addBlog, addContactText, addFooterBanner,getCogatData,saveStbData, deleteStbData ,getStbData, deleteAccuplacerData ,getAccuplacerData ,saveAccuplacerData,getSbacData,saveSbacData ,deleteSbacData,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
+import { addBanner, addBlog, addContactText,deletePSatData,getPSatData, savePSatData,addFooterBanner,getCogatData,saveStbData, deleteStbData ,getStbData, deleteAccuplacerData ,getAccuplacerData ,saveAccuplacerData,getSbacData,saveSbacData ,deleteSbacData,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
@@ -191,11 +191,11 @@ adminRouter.delete("/sat-test", authentication, authorization(['admin']),  delet
 
 
 
-adminRouter.get("/psat-test", authentication, authorization(['admin']),  getSatData);
+adminRouter.get("/psat-test", authentication, authorization(['admin']),  getPSatData);
 
-adminRouter.post("/psat-test", authentication, authorization(['admin']),  saveSatData);
+adminRouter.post("/psat-test", authentication, authorization(['admin']),  savePSatData);
 
-adminRouter.delete("/psat-test", authentication, authorization(['admin']),  deleteSatData); 
+adminRouter.delete("/psat-test", authentication, authorization(['admin']),  deletePSatData); 
 
 /*=============SSAT================*/
 

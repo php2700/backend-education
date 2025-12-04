@@ -33,6 +33,7 @@ import ContactTextModel from '../Models/contactTextModel.js';
 import TermsModel from '../Models/TermsModel.js';
 import ManagementModel from '../Models/managementModel.js';
 import SatTestModel from '../Models/SatTestModel.js';
+import PsatTestModel from "../Models/psatmodel.js"
 import SsatTest from "../Models/SsatTestModel.js";
 import ShsatTest from "../Models/ShsatTestModel.js";
 import IseeTest from "../Models/IseeTestModel.js"
@@ -1804,6 +1805,21 @@ export const getSatData = async (req, res) => {
     res.status(500).json({ message: "Server Error", error });
   }
 };
+export const getPSatData = async (req, res) => {
+  try {
+    // Database se pehla document dhundo
+    const data = await PsatTestModel.findOne();
+    
+    // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
+    res.status(200).json({
+      success: true,
+      data: data || null,
+    });
+  } catch (error) {
+    console.error("Error fetching SAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
 
 // 2. POST API - Create ya Update (Edit) Karne Ke Liye
 export const saveSatData = async (req, res) => {
@@ -1828,12 +1844,48 @@ export const saveSatData = async (req, res) => {
     res.status(500).json({ message: "Save Failed", error });
   }
 };
+export const savePSatData = async (req, res) => {
+  try {
+    // findOneAndUpdate data ko update karega. 
+    // "upsert: true" ka matlab: Agar data nahi hai to naya bana do.
+    // "new: true" ka matlab: Updated data wapas bhejo.
+    
+    const updatedData = await PsatTestModel.findOneAndUpdate(
+      {}, // Empty filter kyunki humein ek hi document chahiye
+      req.body,
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "SAT Page Data Saved Successfully",
+      data: updatedData,
+    });
+  } catch (error) {
+    console.error("Error saving SAT data:", error);
+    res.status(500).json({ message: "Save Failed", error });
+  }
+};
 
 // 3. DELETE API - Poora Data Delete Karne Ke Liye
 export const deleteSatData = async (req, res) => {
   try {
     // Collection se sab kuch uda do
     await SatTestModel.deleteMany({});
+    
+    res.status(200).json({
+      success: true,
+      message: "All SAT Page Data Deleted Successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting SAT data:", error);
+    res.status(500).json({ message: "Delete Failed", error }); 
+  }
+};
+export const deletePSatData = async (req, res) => {
+  try {
+    // Collection se sab kuch uda do
+    await PsatTestModel.deleteMany({});
     
     res.status(200).json({
       success: true,

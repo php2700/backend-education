@@ -28,6 +28,32 @@ import TutoringModel from "../Models/tutoringModel.js";
 import WhyChooseModel from "../Models/whyChooseModel.js";
 import TermsModel from '../Models/TermsModel.js';
 import ManagementModel from '../Models/managementModel.js';
+import SatTestModel from '../Models/SatTestModel.js';
+import PsatTestModel from "../Models/psatmodel.js"
+
+import SsatTest from "../Models/SsatTestModel.js";
+import ShsatTest from "../Models/ShsatTestModel.js";
+import IseeTest from "../Models/IseeTestModel.js"
+import ElaTest from "../Models/ElaDetailModel.js"
+import ScatTest from "../Models/ScatTestModel.js"
+import AmcTest from "../Models/AmcTestModel.js"
+import MathKangarooTest from "../Models/MathKangarooTestModel.js";
+import ActTest from "../Models/ActTestModel.js"
+import CogatTest from "../Models/CogatTestModel.js";
+import SbacTest from "../Models/SbacTestModel.js"
+import AccuplacerTest from  "../Models/AccuplacerModel.js"
+import StbTest from  "../Models/StbTestModel.js"
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -416,5 +442,150 @@ export const getMembers = async (req, res) => {
     res.status(200).json({ success: true, data: members });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getSatData = async (req, res) => {
+  try {
+    // Database se pehla document dhundo
+    const data = await SatTestModel.findOne();
+    
+    // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
+    res.status(200).json({
+      success: true,
+      data: data || null,
+    });
+  } catch (error) {
+    console.error("Error fetching SAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getPSatData = async (req, res) => {
+  try {
+    // Database se pehla document dhundo
+    const data = await PsatTestModel.findOne();
+    
+    // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
+    res.status(200).json({
+      success: true,
+      data: data || null,
+    });
+  } catch (error) {
+    console.error("Error fetching SAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+
+export const getSsatData = async (req, res) => {  
+  try {
+    const data = await SsatTest.findOne();
+    // Data bhej do, agar nahi hai to null
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SSAT Data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getShsatData = async (req, res) => {
+  try {
+    const data = await ShsatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SHSAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getIseeData = async (req, res) => {
+  try {
+    const data = await IseeTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ISEE data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+export const getElaData = async (req, res) => {
+  try {
+    const data = await ElaTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ELA data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getScatData = async (req, res) => {
+  try {
+    const data = await ScatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SCAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+export const getAmcData = async (req, res) => {
+  try {
+    const data = await AmcTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching AMC data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getMathKangarooData = async (req, res) => {
+  try {
+    const data = await MathKangarooTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching Math Kangaroo data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+export const getActData = async (req, res) => {
+  try {
+    const data = await ActTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching ACT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getCogatData = async (req, res) => {
+  try {
+    const data = await CogatTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching CogAT data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getSbacData = async (req, res) => {
+  try {
+    const data = await SbacTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching SBAC data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getAccuplacerData = async (req, res) => {
+  try {
+    const data = await AccuplacerTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching Accuplacer data:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+export const getStbData = async (req, res) => {
+  try {
+    const data = await StbTest.findOne();
+    res.status(200).json({ success: true, data: data || null });
+  } catch (error) {
+    console.error("Error fetching STB data:", error);
+    res.status(500).json({ message: "Server Error", error });
   }
 };
