@@ -132,6 +132,115 @@ export const addBanner = async (req, res, next) => {
   }
 };
 
+export const getDashboardCounts = async (req, res) => {
+  try {
+    // Promise.all use kar rahe hain taaki saari counting ek saath ho (Fast Response)
+    const [
+      // HomeCount,
+      BannerCount,
+      WhyChooseCount,
+      OfferCount,
+      StoryCount,
+
+      TrustCount,
+      PlanCount,
+      FooterBannerCount, 
+
+       // courseCount,
+        // MathTestCount,
+        // TutoringCount,
+        // ChapterMCount,
+        // CompetitionCount,
+        // KangarooCount,
+        // ScienceCount,
+
+       // EnglishCount,
+
+
+        // LanguageCount,
+        // AboutCoreElaCount,
+        // AboutElaCount,
+        // AboutIseeCount,
+        // RegistrationCount,
+
+
+      aboutCount,
+      pricingCount,
+      managementCount,
+      blogCount,
+      testimonialCount,
+      contactCount
+    ] = await Promise.all([
+      // User.countDocuments({}),           // Total Users
+      // Course.countDocuments({}), 
+      // 
+
+      BannerModel.countDocuments({}),
+      WhyChooseModel.countDocuments({}),
+      OfferModel.countDocuments({}),
+      StoryModel.countDocuments({}),
+      TrustModel.countDocuments({}),
+      PlanModel.countDocuments({}),
+      FooterBannerModel.countDocuments({}),// Total Courses
+      PricingModel.countDocuments({}),   // Total Pricing Plans (Aapka Schema)
+      ManagementModel.countDocuments({}),// Total Management Members (Aapka Schema)
+      BlogModel.countDocuments({}),           // Total Blogs
+      TestImonialModel.countDocuments({}),    // Total Testimonials
+      ContactTextModel.countDocuments({}),
+      AboutModel.countDocuments({}) 
+      // MathTestModel.countDocuments({})
+      //   TutoringModel.countDocuments({})
+      //   ChapterModel.countDocuments({})
+      //   CompetitionModel.countDocuments({})
+      //   KangarooModel.countDocuments({})
+      //   ScienceModel.countDocuments({})
+
+      //  // EnglishCount,
+
+
+      //   LanguageModel.countDocuments({})
+      //   AboutCoreElaModel.countDocuments({})
+      //   AboutElaModel.countDocuments({})
+      //   AboutIseeModel.countDocuments({})
+      //   RegistrationModel.countDocuments({})       // Total Contacts
+    ]);
+    const totalHomeItems = BannerCount + WhyChooseCount + OfferCount + StoryCount + TrustCount + PlanCount + FooterBannerCount;
+    // Response bhejein
+    res.status(200).json({
+      success: true,
+      data: {
+        homeTotal: totalHomeItems,
+        //   BannerCount,
+        // WhyChooseCount,
+        // OfferCount,
+        // StoryCount,
+        // StoryCount,
+        // TrustCount,
+        // PlanCount,
+        // FooterBannerCount,
+
+
+        aboutCount,     // Frontend par data.userCount milega
+        // courseCount,
+        pricingCount,
+        managementCount,
+        blogCount,
+        testimonialCount,
+        contactCount
+      }
+    });
+
+
+  } catch (error) {
+    console.error("Dashboard Count Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard counts",
+      error: error.message
+    });
+  }
+};
+
 
 export const editBanner = async (req, res, next) => {
   try {
