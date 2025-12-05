@@ -44,8 +44,8 @@ import MathKangarooTest from "../Models/MathKangarooTestModel.js";
 import ActTest from "../Models/ActTestModel.js"
 import CogatTest from "../Models/CogatTestModel.js";
 import SbacTest from "../Models/SbacTestModel.js"
-import AccuplacerTest from  "../Models/AccuplacerModel.js"
-import StbTest from  "../Models/StbTestModel.js"
+import AccuplacerTest from "../Models/AccuplacerModel.js"
+import StbTest from "../Models/StbTestModel.js"
 import ElaTestModel from "../Models/ElaTestModel.js"
 
 
@@ -129,6 +129,115 @@ export const addBanner = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getDashboardCounts = async (req, res) => {
+  try {
+    // Promise.all use kar rahe hain taaki saari counting ek saath ho (Fast Response)
+    const [
+      // HomeCount,
+      BannerCount,
+      WhyChooseCount,
+      OfferCount,
+      StoryCount,
+
+      TrustCount,
+      PlanCount,
+      FooterBannerCount, 
+
+       // courseCount,
+        // MathTestCount,
+        // TutoringCount,
+        // ChapterMCount,
+        // CompetitionCount,
+        // KangarooCount,
+        // ScienceCount,
+
+       // EnglishCount,
+
+
+        // LanguageCount,
+        // AboutCoreElaCount,
+        // AboutElaCount,
+        // AboutIseeCount,
+        // RegistrationCount,
+
+
+      aboutCount,
+      pricingCount,
+      managementCount,
+      blogCount,
+      testimonialCount,
+      contactCount
+    ] = await Promise.all([
+      // User.countDocuments({}),           // Total Users
+      // Course.countDocuments({}), 
+      // 
+
+      BannerModel.countDocuments({}),
+      WhyChooseModel.countDocuments({}),
+      OfferModel.countDocuments({}),
+      StoryModel.countDocuments({}),
+      TrustModel.countDocuments({}),
+      PlanModel.countDocuments({}),
+      FooterBannerModel.countDocuments({}),// Total Courses
+      PricingModel.countDocuments({}),   // Total Pricing Plans (Aapka Schema)
+      ManagementModel.countDocuments({}),// Total Management Members (Aapka Schema)
+      BlogModel.countDocuments({}),           // Total Blogs
+      TestImonialModel.countDocuments({}),    // Total Testimonials
+      ContactTextModel.countDocuments({}),
+      AboutModel.countDocuments({}) 
+      // MathTestModel.countDocuments({})
+      //   TutoringModel.countDocuments({})
+      //   ChapterModel.countDocuments({})
+      //   CompetitionModel.countDocuments({})
+      //   KangarooModel.countDocuments({})
+      //   ScienceModel.countDocuments({})
+
+      //  // EnglishCount,
+
+
+      //   LanguageModel.countDocuments({})
+      //   AboutCoreElaModel.countDocuments({})
+      //   AboutElaModel.countDocuments({})
+      //   AboutIseeModel.countDocuments({})
+      //   RegistrationModel.countDocuments({})       // Total Contacts
+    ]);
+    const totalHomeItems = BannerCount + WhyChooseCount + OfferCount + StoryCount + TrustCount + PlanCount + FooterBannerCount;
+    // Response bhejein
+    res.status(200).json({
+      success: true,
+      data: {
+        homeTotal: totalHomeItems,
+        //   BannerCount,
+        // WhyChooseCount,
+        // OfferCount,
+        // StoryCount,
+        // StoryCount,
+        // TrustCount,
+        // PlanCount,
+        // FooterBannerCount,
+
+
+        aboutCount,     // Frontend par data.userCount milega
+        // courseCount,
+        pricingCount,
+        managementCount,
+        blogCount,
+        testimonialCount,
+        contactCount
+      }
+    });
+
+
+  } catch (error) {
+    console.error("Dashboard Count Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard counts",
+      error: error.message
+    });
   }
 };
 
@@ -1564,7 +1673,7 @@ export const deleteFaqDetail = async (req, res, next) => {
 
 export const postFaq = async (req, res, next) => {
   try {
-    const { title, description,points } = req.body;
+    const { title, description, points } = req.body;
 
     const newData = new FaqModel({
       title, description, points
@@ -1603,7 +1712,7 @@ export const addContactText = async (req, res, next) => {
     } else {
       const contactText = new ContactTextModel({
         description,
-        mobile,address,
+        mobile, address,
         email,
       });
       result = await contactText.save();
@@ -1661,10 +1770,10 @@ export const getTerms = async (req, res) => {
 export const createTerm = async (req, res) => {
   try {
     const { title, description, points } = req.body;
-    
+
     // Validation check
     if (!title) {
-        return res.status(400).json({ success: false, message: "Title is required" });
+      return res.status(400).json({ success: false, message: "Title is required" });
     }
 
     const newTerm = new TermsModel({
@@ -1685,7 +1794,7 @@ export const createTerm = async (req, res) => {
 export const updateTerm = async (req, res) => {
   try {
     const { _id, title, description, points } = req.body;
-    
+
     const updatedTerm = await TermsModel.findByIdAndUpdate(
       _id,
       { title, description, points },
@@ -1795,7 +1904,7 @@ export const getSatData = async (req, res) => {
   try {
     // Database se pehla document dhundo
     const data = await SatTestModel.findOne();
-    
+
     // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
     res.status(200).json({
       success: true,
@@ -1810,7 +1919,7 @@ export const getPSatData = async (req, res) => {
   try {
     // Database se pehla document dhundo
     const data = await PsatTestModel.findOne();
-    
+
     // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
     res.status(200).json({
       success: true,
@@ -1828,7 +1937,7 @@ export const saveSatData = async (req, res) => {
     // findOneAndUpdate data ko update karega. 
     // "upsert: true" ka matlab: Agar data nahi hai to naya bana do.
     // "new: true" ka matlab: Updated data wapas bhejo.
-    
+
     const updatedData = await SatTestModel.findOneAndUpdate(
       {}, // Empty filter kyunki humein ek hi document chahiye
       req.body,
@@ -1850,7 +1959,7 @@ export const savePSatData = async (req, res) => {
     // findOneAndUpdate data ko update karega. 
     // "upsert: true" ka matlab: Agar data nahi hai to naya bana do.
     // "new: true" ka matlab: Updated data wapas bhejo.
-    
+
     const updatedData = await PsatTestModel.findOneAndUpdate(
       {}, // Empty filter kyunki humein ek hi document chahiye
       req.body,
@@ -1873,35 +1982,35 @@ export const deleteSatData = async (req, res) => {
   try {
     // Collection se sab kuch uda do
     await SatTestModel.deleteMany({});
-    
+
     res.status(200).json({
       success: true,
       message: "All SAT Page Data Deleted Successfully",
     });
   } catch (error) {
     console.error("Error deleting SAT data:", error);
-    res.status(500).json({ message: "Delete Failed", error }); 
+    res.status(500).json({ message: "Delete Failed", error });
   }
 };
 export const deletePSatData = async (req, res) => {
   try {
     // Collection se sab kuch uda do
     await PsatTestModel.deleteMany({});
-    
+
     res.status(200).json({
       success: true,
       message: "All SAT Page Data Deleted Successfully",
     });
   } catch (error) {
     console.error("Error deleting SAT data:", error);
-    res.status(500).json({ message: "Delete Failed", error }); 
+    res.status(500).json({ message: "Delete Failed", error });
   }
 };
 
 
 
 // --- 1. GET DATA (Read) ---
-export const getSsatData = async (req, res) => {  
+export const getSsatData = async (req, res) => {
   try {
     const data = await SsatTest.findOne();
     // Data bhej do, agar nahi hai to null
@@ -1919,10 +2028,10 @@ export const saveSsatData = async (req, res) => {
     const updatedData = await SsatTest.findOneAndUpdate(
       {}, // Empty filter (single page)
       req.body, // Frontend se aaya naya data
-      { 
+      {
         new: true, // Return updated doc
         upsert: true, // Create if not exists
-        setDefaultsOnInsert: true 
+        setDefaultsOnInsert: true
       }
     );
 
@@ -1941,9 +2050,9 @@ export const saveSsatData = async (req, res) => {
 export const deleteSsatData = async (req, res) => {
   try {
     await SsatTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All SSAT Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All SSAT Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting SSAT Data:", error);
@@ -1966,14 +2075,14 @@ export const saveShsatData = async (req, res) => {
   try {
     // Agar data hai to update karo, nahi to naya banao
     const updatedData = await ShsatTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "SHSAT Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "SHSAT Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving SHSAT data:", error);
@@ -1985,9 +2094,9 @@ export const saveShsatData = async (req, res) => {
 export const deleteShsatData = async (req, res) => {
   try {
     await ShsatTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All SHSAT Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All SHSAT Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting SHSAT data:", error);
@@ -2010,14 +2119,14 @@ export const getIseeData = async (req, res) => {
 export const saveIseeData = async (req, res) => {
   try {
     const updatedData = await IseeTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "ISEE Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "ISEE Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving ISEE data:", error);
@@ -2029,9 +2138,9 @@ export const saveIseeData = async (req, res) => {
 export const deleteIseeData = async (req, res) => {
   try {
     await IseeTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All ISEE Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All ISEE Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting ISEE data:", error);
@@ -2054,14 +2163,14 @@ export const getElaData = async (req, res) => {
 export const saveElaData = async (req, res) => {
   try {
     const updatedData = await ElaTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "ELA Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "ELA Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving ELA data:", error);
@@ -2073,9 +2182,9 @@ export const saveElaData = async (req, res) => {
 export const deleteElaData = async (req, res) => {
   try {
     await ElaTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All ELA Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All ELA Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting ELA data:", error);
@@ -2097,14 +2206,14 @@ export const getScatData = async (req, res) => {
 export const saveScatData = async (req, res) => {
   try {
     const updatedData = await ScatTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "SCAT Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "SCAT Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving SCAT data:", error);
@@ -2116,9 +2225,9 @@ export const saveScatData = async (req, res) => {
 export const deleteScatData = async (req, res) => {
   try {
     await ScatTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All SCAT Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All SCAT Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting SCAT data:", error);
@@ -2140,14 +2249,14 @@ export const getAmcData = async (req, res) => {
 export const saveAmcData = async (req, res) => {
   try {
     const updatedData = await AmcTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "AMC Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "AMC Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving AMC data:", error);
@@ -2159,9 +2268,9 @@ export const saveAmcData = async (req, res) => {
 export const deleteAmcData = async (req, res) => {
   try {
     await AmcTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All AMC Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All AMC Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting AMC data:", error);
@@ -2183,14 +2292,14 @@ export const getMathKangarooData = async (req, res) => {
 export const saveMathKangarooData = async (req, res) => {
   try {
     const updatedData = await MathKangarooTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "Math Kangaroo Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "Math Kangaroo Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving Math Kangaroo data:", error);
@@ -2202,9 +2311,9 @@ export const saveMathKangarooData = async (req, res) => {
 export const deleteMathKangarooData = async (req, res) => {
   try {
     await MathKangarooTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All Math Kangaroo Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All Math Kangaroo Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting Math Kangaroo data:", error);
@@ -2226,14 +2335,14 @@ export const getActData = async (req, res) => {
 export const saveActData = async (req, res) => {
   try {
     const updatedData = await ActTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "ACT Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "ACT Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving ACT data:", error);
@@ -2245,9 +2354,9 @@ export const saveActData = async (req, res) => {
 export const deleteActData = async (req, res) => {
   try {
     await ActTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All ACT Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All ACT Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting ACT data:", error);
@@ -2269,14 +2378,14 @@ export const getCogatData = async (req, res) => {
 export const saveCogatData = async (req, res) => {
   try {
     const updatedData = await CogatTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "CogAT Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "CogAT Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving CogAT data:", error);
@@ -2288,9 +2397,9 @@ export const saveCogatData = async (req, res) => {
 export const deleteCogatData = async (req, res) => {
   try {
     await CogatTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All CogAT Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All CogAT Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting CogAT data:", error);
@@ -2311,14 +2420,14 @@ export const getSbacData = async (req, res) => {
 export const saveSbacData = async (req, res) => {
   try {
     const updatedData = await SbacTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "SBAC Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "SBAC Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving SBAC data:", error);
@@ -2330,9 +2439,9 @@ export const saveSbacData = async (req, res) => {
 export const deleteSbacData = async (req, res) => {
   try {
     await SbacTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All SBAC Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All SBAC Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting SBAC data:", error);
@@ -2353,14 +2462,14 @@ export const getAccuplacerData = async (req, res) => {
 export const saveAccuplacerData = async (req, res) => {
   try {
     const updatedData = await AccuplacerTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "Accuplacer Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "Accuplacer Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving Accuplacer data:", error);
@@ -2372,9 +2481,9 @@ export const saveAccuplacerData = async (req, res) => {
 export const deleteAccuplacerData = async (req, res) => {
   try {
     await AccuplacerTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All Accuplacer Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All Accuplacer Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting Accuplacer data:", error);
@@ -2395,14 +2504,14 @@ export const getStbData = async (req, res) => {
 export const saveStbData = async (req, res) => {
   try {
     const updatedData = await StbTest.findOneAndUpdate(
-      {}, 
-      req.body, 
+      {},
+      req.body,
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-    res.status(200).json({ 
-      success: true, 
-      message: "STB Page Updated Successfully", 
-      data: updatedData 
+    res.status(200).json({
+      success: true,
+      message: "STB Page Updated Successfully",
+      data: updatedData
     });
   } catch (error) {
     console.error("Error saving STB data:", error);
@@ -2414,9 +2523,9 @@ export const saveStbData = async (req, res) => {
 export const deleteStbData = async (req, res) => {
   try {
     await StbTest.deleteMany({});
-    res.status(200).json({ 
-      success: true, 
-      message: "All STB Data Deleted Successfully" 
+    res.status(200).json({
+      success: true,
+      message: "All STB Data Deleted Successfully"
     });
   } catch (error) {
     console.error("Error deleting STB data:", error);
