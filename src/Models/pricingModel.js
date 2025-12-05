@@ -5,17 +5,29 @@ const pricingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    planName: {
+        type: String,
+        required: true,
+    },
     className: {
         type: String,
         required: true,
     },
     fees: {
-        type: String,
+        type: [{
+            label:{
+  type: String,
         required: true,
+            },price:{
+  type: String,
+        required: true,
+            }
+        }],
+        required: false,
     },
     feesPerHour: {
         type: String,
-        required: true,
+        required: false,
     },
     off: {
         type: String,
