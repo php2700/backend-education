@@ -41,6 +41,13 @@ const SatTestSchema = new mongoose.Schema(
         modules: { type: String, default: "" },
       },
     ],
+      examPeriod: [
+      {
+        section: { type: String, default: "" },
+        time: { type: String, default: "" },
+        modules: { type: String, default: "" },
+      },
+    ],
     tableFooter: {
       type: String,
       default: "",

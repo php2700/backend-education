@@ -144,24 +144,24 @@ export const getDashboardCounts = async (req, res) => {
 
       TrustCount,
       PlanCount,
-      FooterBannerCount, 
+      FooterBannerCount,
 
-       // courseCount,
-        // MathTestCount,
-        // TutoringCount,
-        // ChapterMCount,
-        // CompetitionCount,
-        // KangarooCount,
-        // ScienceCount,
+      // courseCount,
+      // MathTestCount,
+      // TutoringCount,
+      // ChapterMCount,
+      // CompetitionCount,
+      // KangarooCount,
+      // ScienceCount,
 
-       // EnglishCount,
+      // EnglishCount,
 
 
-        // LanguageCount,
-        // AboutCoreElaCount,
-        // AboutElaCount,
-        // AboutIseeCount,
-        // RegistrationCount,
+      // LanguageCount,
+      // AboutCoreElaCount,
+      // AboutElaCount,
+      // AboutIseeCount,
+      // RegistrationCount,
 
 
       aboutCount,
@@ -187,7 +187,7 @@ export const getDashboardCounts = async (req, res) => {
       BlogModel.countDocuments({}),           // Total Blogs
       TestImonialModel.countDocuments({}),    // Total Testimonials
       ContactTextModel.countDocuments({}),
-      AboutModel.countDocuments({}) 
+      AboutModel.countDocuments({})
       // MathTestModel.countDocuments({})
       //   TutoringModel.countDocuments({})
       //   ChapterModel.countDocuments({})
@@ -693,11 +693,11 @@ export const addPricing = async (req, res, next) => {
     console.log(req?.body)
     if (!className) return res.status(400).json({ success: false, message: "All field is required" });
     if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
-const parsedFees = JSON.parse(fees);
+    const parsedFees = JSON.parse(fees);
     const imagePath = `public/uploads/${req.file.filename}`
     const pricing = new PricingModel({
       className,
-      fees:parsedFees,
+      fees: parsedFees,
       image: imagePath,
       feesPerHour, off, planName
     });
@@ -733,9 +733,12 @@ export const editPricing = async (req, res, next) => {
         return res.status(400).json({ success: false, message: "Invalid fees format" });
       }
     }
-    pricingData.className = className || pricingData.className;
-    pricingData.feesPerHour = feesPerHour || pricingData.feesPerHour;
-    pricingData.off = off || pricingData.off;
+    if (pricingData.className)
+      pricingData.className = className || pricingData.className;
+    if (pricingData?.feesPerHour)
+      pricingData.feesPerHour = feesPerHour || pricingData.feesPerHour;
+    if (pricingData?.off)
+      pricingData.off = off || pricingData.off;
 
     await pricingData.save();
 
