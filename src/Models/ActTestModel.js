@@ -9,14 +9,27 @@ const ActTestSchema = new mongoose.Schema(
     // --- 2. All About ACT ---
     aboutHeading: { type: String, default: "" }, // "All About ACT"
     aboutDescription: { type: String, default: "" }, // Paragraph content
-
+    aboutList: [{
+      title: {
+        type: String, default: ""
+      }, description: {
+        type: String, default: ""
+      }
+    }],
+    actHeading: { type: String, default: "" },
     // --- 3. ACT Test Structure (Bullet Points) ---
-    structureHeading: { type: String, default: "" }, // "ACT Test Structure"
-    structurePoints: [{ type: String }], // Array of strings
+    actList: [
+      {
+        title: {
+          type: String, default: ""
+        }, description: {
+          type: String, default: ""
+        }
+      }
+    ]
 
     // --- 4. New ACT Changes in 2025 (Numbered List) ---
-    changesHeading: { type: String, default: "" }, // "New ACT Changes in 2025"
-    changesPoints: [{ type: String }], // Array of strings
+    // "New ACT Changes in 2025"
   },
   { timestamps: true }
 );

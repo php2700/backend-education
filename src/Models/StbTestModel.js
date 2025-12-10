@@ -11,10 +11,13 @@ const StbTestSchema = new mongoose.Schema(
     aboutDescription: { type: String, default: "" },
 
     // --- 3. STB Subtests (Dynamic List) ---
-    subtestHeading: { type: String, default: "" }, // "STB Subtests"
+    subtestHeading: { type: String, default: "" },
+    stbUsedDescription: { type: String, default: "" },
+    stbSubsetPoints: { type: [String], default: [] },
+    stbSubsetDescription: { type: String, default: "" },
     subtests: [
       {
-        title: { type: String, default: "" }, // e.g. "Visual Memory"
+        title: { type: String, default: "" },
         content: { type: String, default: "" }, // Description text
       },
     ],
@@ -22,7 +25,7 @@ const StbTestSchema = new mongoose.Schema(
     // --- 4. Important Testing Information & Table ---
     infoHeading: { type: String, default: "" }, // "Important Testing Information"
     infoDescription: { type: String, default: "" },
-    
+
     // Table Rows
     timeTable: [
       {

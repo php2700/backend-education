@@ -9,7 +9,7 @@ const IseeTestSchema = new mongoose.Schema(
     // --- 2. All About ISEE Section ---
     aboutHeading: { type: String, default: "" },
     aboutDescription: { type: String, default: "" },
-    aboutPoints: [{ type: String }], // Bullet points list
+ // Bullet points list
     aboutFooter: { type: String, default: "" }, // "Different levels are offered..."
 
     // --- 3. Purpose Section ---
@@ -18,14 +18,21 @@ const IseeTestSchema = new mongoose.Schema(
 
     // --- 4. Test Structure & Levels ---
     structureHeading: { type: String, default: "" },
-    structureLevelIntro: { type: String, default: "" }, // "The ISEE has four levels:"
-    structureLevels: [{ type: String }], // List of Levels
-    structureSectionIntro: { type: String, default: "" }, // "The test includes five sections:"
-    structureSections: [{ type: String }], // List of Sections
+    structureList: [
+      {
+        title:{ type: String, default: "" },
+        description:{ type: String, default: "" }
+      }
+    ], // "The ISEE has four levels:"
 
     // --- 5. What Sections Measure ---
     measureHeading: { type: String, default: "" },
-    measurePoints: [{ type: String }], // e.g. "Verbal Reasoning: Vocabulary..."
+    measureList:  [
+      {
+        title:{ type: String, default: "" },
+        description:{ type: String, default: "" }
+      }
+    ], // e.g. "Verbal Reasoning: Vocabulary..."
 
     // --- 6. Registration Details ---
     registrationHeading: { type: String, default: "" },

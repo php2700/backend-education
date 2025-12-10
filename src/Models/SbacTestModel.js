@@ -12,11 +12,17 @@ const SbacTestSchema = new mongoose.Schema(
 
     // --- 3. SBAC Assessment Details (List) ---
     assessmentHeading: { type: String, default: "" }, // "SBAC Assessment Details"
-    assessmentPoints: [{ type: String }], // Bullet points
+    assessmentDescription: { type: String }, // Bullet points
 
     // --- 4. Accessibility Resources (List) ---
-    accessHeading: { type: String, default: "" }, // "Accessibility Resources"
-    accessPoints: [{ type: String }], // Bullet points
+    assessmentPoints: [
+      {
+        title:
+          { type: String, default: "" },
+        description: {
+          type: String, default: ""
+        }
+      }]
   },
   { timestamps: true }
 );
