@@ -18,6 +18,7 @@ const AmcTestSchema = new mongoose.Schema(
     competitionsHeading: { type: String, default: "" }, // "Different AMC Competitions"
     competitionCards: [
       {
+        amcDescription:{type:String,default:""},
         title: { type: String, default: "" }, // e.g. "AMC 8"
         description: { type: String, default: "" }, // "25-question..."
         whenText: { type: String, default: "" }, // "When: January annually"

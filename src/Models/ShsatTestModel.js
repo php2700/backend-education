@@ -7,7 +7,7 @@ const ShsatTestSchema = new mongoose.Schema(
     heroDescription: { type: String, default: "" }, // Paragraphs at the top
 
     // --- 2. About Section (Middle) ---
-    aboutMainHeading: { type: String, default: "" }, // e.g. "All About SHSAT"
+    aboutMainHeading: { type: String,required:false, default: false }, // e.g. "All About SHSAT"
     
     // Dynamic List for things like "Where do you take...", "Digital update...", etc.
     aboutItems: [

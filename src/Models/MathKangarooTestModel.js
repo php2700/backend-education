@@ -16,7 +16,12 @@ const MathKangarooTestSchema = new mongoose.Schema(
 
     // --- 4. General Rules (List) ---
     rulesHeading: { type: String, default: "" }, // "General Rules"
-    rulesList: [{ type: String }], // Bullet points
+   rulesList: [
+  {
+    type: { type: String, default: "" },   // Rule title
+    subpoints: [{ type: String, default: "" }] // Array of strings
+  }
+],
 
     // --- 5. Scoring ---
     scoringHeading: { type: String, default: "" }, // "Scoring"

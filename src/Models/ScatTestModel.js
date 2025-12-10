@@ -30,18 +30,16 @@ const ScatTestSchema = new mongoose.Schema(
         details: { type: String, default: "" }, // Verbal/Quant scores text
       },
     ],
-    scoringFooter: { type: String, default: "" },
 
-    // --- 5. SCAT Test Tips ---
     tipsHeading: { type: String, default: "" },
     tipsList: [{ type: String }], // Bullet points
 
     // --- 6. How To Register ---
     registerHeading: { type: String, default: "" },
-    registerSubHeading: { type: String, default: "" }, // "Schedule your test..."
-    registerContactList: [{ type: String }], // Online, Phone, Fee
-    registerAuthNote: { type: String, default: "" }, // "You must have a 9-digit..."
-    registerGetFromList: [{ type: String }], // Mail, Email, Portal list
+    registerSubHeading: { type: String, default: "" }, 
+    registerContactList: { type: String }, // Online, Phone, Fee
+    authHeading:{ type: String },
+    authDescription:{ type: String }
   },
   { timestamps: true }
 );
