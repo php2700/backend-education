@@ -43,6 +43,7 @@ import CogatTest from "../Models/CogatTestModel.js";
 import SbacTest from "../Models/SbacTestModel.js"
 import AccuplacerTest from  "../Models/AccuplacerModel.js"
 import StbTest from  "../Models/StbTestModel.js"
+import K12ServiceModel, { MethodologyModel } from "../Models/k-12Model.js";
 
 
 
@@ -345,6 +346,30 @@ export const getTestImonial = async (req, res, next) => {
     next(err);
   }
 };
+export const getK12 = async (req, res, next) => {
+  try {
+    const data = await K12ServiceModel.findOne()
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getMethodology = async (req, res, next) => {
+  try {
+    const data = await MethodologyModel.find().sort({ createdAt: -1 })
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getTerms = async (req, res) => {
   try {
     const terms = await TermsModel.find().sort({ createdAt: 1 });

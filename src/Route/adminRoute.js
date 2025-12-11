@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { addBanner, addBlog, getDashboardCounts ,addContactText,deletePSatData,getPSatData, savePSatData,addFooterBanner,getCogatData,saveStbData, deleteStbData ,getStbData, deleteAccuplacerData ,getAccuplacerData ,saveAccuplacerData,getSbacData,saveSbacData ,deleteSbacData,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, } from "../Controller/adminController.js";
+import { addBanner, addBlog, getDashboardCounts ,addContactText,deletePSatData,getPSatData, savePSatData,addFooterBanner,getCogatData,saveStbData, deleteStbData ,getStbData, deleteAccuplacerData ,getAccuplacerData ,saveAccuplacerData,getSbacData,saveSbacData ,deleteSbacData,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, deleteMethodology, postMethodology, editMethodology, postK12, } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
-import { getAbout, getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getCotactList, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { getAbout, getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getCotactList, getElaDetail, getFaq, getFooterBanner, getK12, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getMethodology, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
 
 
 const adminRouter = Router();
@@ -259,6 +259,21 @@ adminRouter.delete("/accuplacer-test",authentication, authorization(['admin']), 
 adminRouter.get("/stb-test",authentication, authorization(['admin']), getStbData);
 adminRouter.post("/stb-test",authentication, authorization(['admin']), saveStbData);
 adminRouter.delete("/stb-test",authentication, authorization(['admin']), deleteStbData);
+
+
+
+/*-------------------------k-12-***methodology------------------------*/
+adminRouter.post("/methodology", authentication, authorization(['admin']), upload.single("image"), postMethodology)
+adminRouter.patch("/methodology", authentication, authorization(['admin']), upload.single("image"), editMethodology)
+adminRouter.get("/methodology", authentication, authorization(['admin']), getMethodology)
+adminRouter.delete("/methodology/:id", authentication, authorization(['admin']), deleteMethodology)
+
+
+/*-------------------------k-12-***service------------------------*/
+adminRouter.post("/k-12service", authentication, authorization(['admin']), upload.fields([{name:'image',maxCount:1},{name:'image1',maxCount:1},
+    {name:'image2',maxCount:1},{name:'image3',maxCount:1}
+]), postK12)
+adminRouter.get("/k-12service", authentication, authorization(['admin']), getK12)
 
 
 export default adminRouter

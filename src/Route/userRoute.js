@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addContact,getIseeData,getPSatData,getStbData,getAccuplacerData,getSbacData,getCogatData,getActData,getMathKangarooData,getAmcData, getScatData,getElaData, getAbout,getSsatData,getShsatData, getAboutEla,getTerms,getSatData , getAboutIsee, getMembers ,getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { addContact, getIseeData, getPSatData, getStbData, getAccuplacerData, getSbacData, getCogatData, getActData, getMathKangarooData, getAmcData, getScatData, getElaData, getAbout, getSsatData, getShsatData, getAboutEla, getTerms, getSatData, getAboutIsee, getMembers, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose, getMethodology, getK12 } from "../Controller/userController.js";
 
 const userRouter = Router();
 
@@ -94,16 +94,16 @@ userRouter.get("/testImonial", getTestImonial)
 userRouter.get('/terms', getTerms)
 
 
-userRouter.get('/management', getMembers); 
+userRouter.get('/management', getMembers);
 
 /*--------SSAT-----*/
 
-userRouter.get("/sat-test",  getSatData);
-userRouter.get("/psat-test",  getPSatData);
+userRouter.get("/sat-test", getSatData);
+userRouter.get("/psat-test", getPSatData);
 userRouter.get("/ssat-test", getSsatData);
-userRouter.get("/shsat-test",  getShsatData);
-userRouter.get("/isee-test",   getIseeData);
-userRouter.get("/ela-test", getElaData );
+userRouter.get("/shsat-test", getShsatData);
+userRouter.get("/isee-test", getIseeData);
+userRouter.get("/ela-test", getElaData);
 userRouter.get("/scat-test", getScatData);
 userRouter.get("/amc-test", getAmcData);
 
@@ -114,7 +114,8 @@ userRouter.get("/sbac-test", getSbacData);
 userRouter.get("/accuplacer-test", getAccuplacerData);
 userRouter.get("/stb-test", getStbData);
 
-
+userRouter.get("/methodology", getMethodology)
+userRouter.get("/k-12service", getK12)
 
 
 

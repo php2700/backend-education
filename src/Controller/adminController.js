@@ -47,6 +47,7 @@ import SbacTest from "../Models/SbacTestModel.js"
 import AccuplacerTest from "../Models/AccuplacerModel.js"
 import StbTest from "../Models/StbTestModel.js"
 import ElaTestModel from "../Models/ElaTestModel.js"
+import K12ServiceModel, { MethodologyModel } from '../Models/k-12Model.js';
 
 
 
@@ -1523,6 +1524,30 @@ export const postTestImonial = async (req, res, next) => {
   }
 };
 
+
+export const postMethodology = async (req, res, next) => {
+  try {
+    const { title,description } = req.body;
+    if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
+
+    const imagePath = `public/uploads/${req.file.filename}`
+    const newData = new MethodologyModel({
+      image: imagePath,
+      title,description
+    });
+
+    await newData.save();
+
+    res.status(201).json({
+      success: true,
+      message: "methodology  detail created successfully",
+      data: newData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const editTestImonial = async (req, res, next) => {
   try {
     const { _id, title, description, address } = req.body;
@@ -1555,6 +1580,38 @@ export const editTestImonial = async (req, res, next) => {
   }
 };
 
+export const editMethodology = async (req, res, next) => {
+  try {
+
+    const { description, title, _id } = req.body;
+
+    const methodologyData = await MethodologyModel.findById(_id);
+    if (!methodologyData)
+      return res.status(404).json({ success: false, message: "methodology data data not found" });
+
+    if (req.file) {
+      if (methodologyData.image) {
+        const oldPath = path.join("public", methodologyData.image);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      }
+      methodologyData.image = `public/uploads/${req.file.filename}`;
+    }
+
+    methodologyData.description = description || methodologyData.description;
+    methodologyData.title = title || methodologyData.title;
+
+    await methodologyData.save();
+
+    res.status(200).json({
+      success: true,
+      message: "methodologyData updated successfully",
+      data: methodologyData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const deleteTestImonialDetail = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -1574,6 +1631,33 @@ export const deleteTestImonialDetail = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "testimonial deleted successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const deleteMethodology = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await MethodologyModel.findById(id);
+    if (!item) {
+      return res.status(404).json({ success: false, message: "Data not found" });
+    }
+
+    await MethodologyModel.findByIdAndDelete(id);
+    if (item.image) {
+      const imagePath = path.resolve(item.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+    res.status(200).json({
+      success: true,
+      message: "methodolgy deleted successfully",
     });
 
   } catch (err) {
@@ -2540,5 +2624,111 @@ export const deleteStbData = async (req, res) => {
   } catch (error) {
     console.error("Error deleting STB data:", error);
     res.status(500).json({ message: "Delete Failed", error });
+  }
+};
+
+export const postK12 = async (req, res, next) => {
+  try {
+    const {
+      title,
+      description,
+
+      title1,
+      description1,
+
+      title2,
+      description2,
+
+      title3,
+      description3
+    } = req.body;
+
+    // files from multer
+    const files = req.files;
+
+    const image = files?.image ? `public/uploads/${files.image[0].filename}` : null;
+    const image1 = files?.image1 ? `public/uploads/${files.image1[0].filename}` : null;
+    const image2 = files?.image2 ? `public/uploads/${files.image2[0].filename}` : null;
+    const image3 = files?.image3 ? `public/uploads/${files.image3[0].filename}` : null;
+
+    // find existing document (you want to update single document)
+    const existing = await K12ServiceModel.findOne();
+
+    if (existing) {
+      // delete old images if new one uploaded
+      if (image && existing.image && fs.existsSync(path.join(process.cwd(), existing.image))) {
+        fs.unlinkSync(path.join(process.cwd(), existing.image));
+      }
+      if (image1 && existing.image1 && fs.existsSync(path.join(process.cwd(), existing.image1))) {
+        fs.unlinkSync(path.join(process.cwd(), existing.image1));
+      }
+      if (image2 && existing.image2 && fs.existsSync(path.join(process.cwd(), existing.image2))) {
+        fs.unlinkSync(path.join(process.cwd(), existing.image2));
+      }
+      if (image3 && existing.image3 && fs.existsSync(path.join(process.cwd(), existing.image3))) {
+        fs.unlinkSync(path.join(process.cwd(), existing.image3));
+      }
+
+      // update fields
+      if (image) existing.image = image;
+      if (image1) existing.image1 = image1;
+      if (image2) existing.image2 = image2;
+      if (image3) existing.image3 = image3;
+
+      existing.title = title;
+      existing.description = description;
+
+      existing.title1 = title1;
+      existing.description1 = Array.isArray(description1) ?  JSON.parse(description1) : JSON.parse([description1]);
+
+      existing.title2 = title2;
+      existing.description2 = Array.isArray(description2) ? JSON.parse(description2) : JSON.parse([description2]);
+
+      existing.title3 = title3;
+      existing.description3 = Array.isArray(description3) ? JSON.parse(description3) : JSON.parse([description3]);
+
+      await existing.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "K-12 service updated successfully",
+        data: existing
+      });
+    }
+
+    // Creating new record
+    if (!image || !image1 || !image2 || !image3) {
+      return res.status(400).json({
+        success: false,
+        message: "All 4 images are required while creating new data",
+      });
+    }
+
+    const newData = await K12ServiceModel.create({
+      image,
+      title,
+      description,
+
+      image1,
+      title1,
+      description1: Array.isArray(description1) ? description1 : [description1],
+
+      image2,
+      title2,
+      description2: Array.isArray(description2) ? description2 : [description2],
+
+      image3,
+      title3,
+      description3: Array.isArray(description3) ? description3 : [description3],
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "K-12 service created successfully",
+      data: newData
+    });
+
+  } catch (err) {
+    next(err);
   }
 };
