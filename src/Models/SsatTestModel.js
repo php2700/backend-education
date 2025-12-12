@@ -113,6 +113,8 @@ const SsatTestSchema = new mongoose.Schema(
         section: { type: String, default: "" },
         time: { type: String, default: "" },
         questions: { type: String, default: "" },
+        download: { type: String, default: "" }
+      
       },
     ],
 
@@ -122,6 +124,8 @@ const SsatTestSchema = new mongoose.Schema(
         section: { type: String, default: "" },
         time: { type: String, default: "" },
         questions: { type: String, default: "" },
+        download: { type: String, default: "" }
+
       },
     ],
 
