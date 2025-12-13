@@ -53,6 +53,7 @@ const CogatTestSchema = new mongoose.Schema(
     // --- 1. Hero Section ---
     heroTitle: { type: String, default: "" },
     heroDescription: { type: String, default: "" },
+    heroSubDescription: { type: String, default: "" },
     heroList: [{ type: String }], // Bullet points in Hero section
 
     // --- 2. What is on the CogAT Test? ---
