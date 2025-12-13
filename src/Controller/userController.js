@@ -41,8 +41,8 @@ import MathKangarooTest from "../Models/MathKangarooTestModel.js";
 import ActTest from "../Models/ActTestModel.js"
 import CogatTest from "../Models/CogatTestModel.js";
 import SbacTest from "../Models/SbacTestModel.js"
-import AccuplacerTest from  "../Models/AccuplacerModel.js"
-import StbTest from  "../Models/StbTestModel.js"
+import AccuplacerTest from "../Models/AccuplacerModel.js"
+import StbTest from "../Models/StbTestModel.js"
 import K12ServiceModel, { MethodologyModel } from "../Models/k-12Model.js";
 
 
@@ -103,6 +103,17 @@ export const getOffer = async (req, res, next) => {
   }
 };
 
+export const getOfferDetail = async (req, res, next) => {
+  try {
+       const { id } = req.params; 
+
+    const offerData = await OfferModel.findOne({ _id: id });
+    res.json({ data: offerData });
+  } catch (error) {
+    next(error)
+  }
+};
+
 export const getBanner = async (req, res, next) => {
   try {
     const bannerData = await BannerModel.findOne();
@@ -156,6 +167,19 @@ export const getBlog = async (req, res, next) => {
     next(error)
   }
 };
+
+export const getBlogDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params; 
+    
+    const blogData = await BlogModel.findOne({ _id: id });
+
+    res.json({ data: blogData });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const getRegistration = async (req, res, next) => {
   try {
@@ -474,7 +498,7 @@ export const getSatData = async (req, res) => {
   try {
     // Database se pehla document dhundo
     const data = await SatTestModel.findOne();
-    
+
     // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
     res.status(200).json({
       success: true,
@@ -489,7 +513,7 @@ export const getPSatData = async (req, res) => {
   try {
     // Database se pehla document dhundo
     const data = await PsatTestModel.findOne();
-    
+
     // Agar data nahi hai, to null return karo (Frontend empty form dikhayega)
     res.status(200).json({
       success: true,
@@ -502,7 +526,7 @@ export const getPSatData = async (req, res) => {
 };
 
 
-export const getSsatData = async (req, res) => {  
+export const getSsatData = async (req, res) => {
   try {
     const data = await SsatTest.findOne();
     // Data bhej do, agar nahi hai to null
