@@ -734,12 +734,13 @@ export const editPricing = async (req, res, next) => {
         return res.status(400).json({ success: false, message: "Invalid fees format" });
       }
     }
-    if (pricingData.className)
+
+    if (className)
       pricingData.className = className || pricingData.className;
-    if (pricingData?.feesPerHour)
+    if (feesPerHour)
       pricingData.feesPerHour = feesPerHour || pricingData.feesPerHour;
-    if (pricingData?.off)
-      pricingData.off = off || pricingData.off;
+
+    pricingData.off = off
 
     await pricingData.save();
 
@@ -1527,13 +1528,13 @@ export const postTestImonial = async (req, res, next) => {
 
 export const postMethodology = async (req, res, next) => {
   try {
-    const { title,description } = req.body;
+    const { title, description } = req.body;
     if (!req.file) return res.status(400).json({ success: false, message: "All field is required" });
 
     const imagePath = `public/uploads/${req.file.filename}`
     const newData = new MethodologyModel({
       image: imagePath,
-      title,description
+      title, description
     });
 
     await newData.save();
@@ -2679,7 +2680,7 @@ export const postK12 = async (req, res, next) => {
       existing.description = description;
 
       existing.title1 = title1;
-      existing.description1 = Array.isArray(description1) ?  JSON.parse(description1) : JSON.parse([description1]);
+      existing.description1 = Array.isArray(description1) ? JSON.parse(description1) : JSON.parse([description1]);
 
       existing.title2 = title2;
       existing.description2 = Array.isArray(description2) ? JSON.parse(description2) : JSON.parse([description2]);
