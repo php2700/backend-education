@@ -5,7 +5,7 @@ const offerSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
-        enum: ['new', 'hot deal', 'referral']
+        enum: ['New', 'Hot Deal', 'Referral']
     },
     title: {
         type: String,
