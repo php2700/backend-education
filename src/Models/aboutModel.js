@@ -26,6 +26,7 @@ const aboutSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+       howDiffrentHeader: { type: String, default: "" },
     },
     { timestamps: true }
 );

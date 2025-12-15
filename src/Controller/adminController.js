@@ -1673,7 +1673,8 @@ export const upsertAbout = async (req, res, next) => {
       whyUsDescription,
       howDiffrentDescription,
       safetyDescription,
-      tutorDescription
+      tutorDescription,
+      howDiffrentHeader
     } = req.body;
 
     const toArray = (value) => {
@@ -1710,6 +1711,7 @@ export const upsertAbout = async (req, res, next) => {
       existingAbout.howDiffrentDescription = toArray(howDiffrentDescription);
       existingAbout.safetyDescription = toArray(safetyDescription);
       existingAbout.tutorDescription = tutorDescription;
+      existingAbout.howDiffrentHeader = howDiffrentHeader;
 
       await existingAbout.save();
 
@@ -1734,6 +1736,7 @@ export const upsertAbout = async (req, res, next) => {
       howDiffrentDescription: toArray(howDiffrentDescription),
       safetyDescription: toArray(safetyDescription),
       tutorDescription,
+       howDiffrentHeader, 
     });
 
     return res.status(201).json({
