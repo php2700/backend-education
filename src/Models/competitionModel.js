@@ -19,6 +19,7 @@ const competitionSchema = new mongoose.Schema({
     },
     competition: [
         {
+             title:{ type: String, required: false },
             amc: { type: String, required: true },
             description: { type: String, required: true },
             for: { type: String, required: true },

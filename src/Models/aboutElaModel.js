@@ -17,10 +17,20 @@ const aboutElaSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    questionType: {
-        type: [String],
-        required: true,
-    },
+    questionType: [
+        {
+            title: {
+                type: String,
+                required: true,
+                trim: true,
+            },
+            description: {
+                type: String,
+                required: true,
+                trim: true,
+            },
+        },
+    ],
 }, {
     timestamps: true
 })
