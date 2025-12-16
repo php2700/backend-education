@@ -18,6 +18,16 @@ const ActTestSchema = new mongoose.Schema(
     }],
     actHeading: { type: String, default: "" },
     // --- 3. ACT Test Structure (Bullet Points) ---
+    additionalInfo: { type: String, default: "" },
+    additionalInfoList: [
+      {
+        title: {
+          type: String, default: ""
+        }, description: {
+          type: String, default: ""
+        }
+      },
+    ],
     actList: [
       {
         title: {
