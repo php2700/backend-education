@@ -18,7 +18,7 @@ import MathTestModel from "../Models/mathTestModel.js";
 import OfferModel from "../Models/offerModel.js";
 import PlanModel from "../Models/planModel.js";
 import PricingModel from "../Models/pricingModel.js";
-import RegistrationModel from "../Models/registrationModel.js";
+import RegistrationModel, { MeasureModel } from "../Models/registrationModel.js";
 import ScienceDetailModel from "../Models/scienceDetailModel.js";
 import ScienceModel from "../Models/scienceModel.js";
 import StoryModel from "../Models/successStoryModel.js";
@@ -184,6 +184,15 @@ export const getBlogDetail = async (req, res, next) => {
 export const getRegistration = async (req, res, next) => {
   try {
     const registrationData = await RegistrationModel.findOne()
+    res.json({ data: registrationData });
+  } catch (error) {
+    next(error)
+  }
+};
+
+export const getMeasureData = async (req, res, next) => {
+  try {
+    const registrationData = await MeasureModel.findOne()
     res.json({ data: registrationData });
   } catch (error) {
     next(error)

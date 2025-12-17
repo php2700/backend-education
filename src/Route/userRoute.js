@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addContact, getIseeData, getPSatData, getStbData, getAccuplacerData, getSbacData, getCogatData, getActData, getMathKangarooData, getAmcData, getScatData, getElaData, getAbout, getSsatData, getShsatData, getAboutEla, getTerms, getSatData, getAboutIsee, getMembers, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose, getMethodology, getK12, getBlogDetail, getOfferDetail } from "../Controller/userController.js";
+import { addContact, getIseeData, getPSatData, getStbData, getAccuplacerData, getSbacData, getCogatData, getActData, getMathKangarooData, getAmcData, getScatData, getElaData, getAbout, getSsatData, getShsatData, getAboutEla, getTerms, getSatData, getAboutIsee, getMembers, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getElaDetail, getFaq, getFooterBanner, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose, getMethodology, getK12, getBlogDetail, getOfferDetail, getMeasureData } from "../Controller/userController.js";
 
 const userRouter = Router();
 
@@ -81,6 +81,7 @@ userRouter.get("/about-ela", getAboutEla)
 userRouter.get("/about-isee-test", getAboutIsee)
 
 /*--------------------registration details---------------*/
+userRouter.get("/measure",  getMeasureData)
 userRouter.get("/registration", getRegistration)
 
 

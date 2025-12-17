@@ -14,7 +14,7 @@ import PricingModel from '../Models/pricingModel.js';
 import MathTestModel from '../Models/mathTestModel.js';
 import TutoringModel from '../Models/tutoringModel.js';
 import BlogModel from '../Models/blogModel.js';
-import RegistrationModel from '../Models/registrationModel.js';
+import RegistrationModel, { MeasureModel } from '../Models/registrationModel.js';
 import AboutIseeModel from '../Models/aboutIseeModel.js';
 import AboutElaModel from '../Models/aboutElaModel.js';
 import ChapterModel from '../Models/chapterModel.js';
@@ -1360,6 +1360,25 @@ export const upsertCoreEla = async (req, res, next) => {
   } catch (error) {
     console.error("Error saving science:", error);
     next(error);
+  }
+};
+
+// --- SAVE / UPDATE DATA (Upsert) ---
+export const saveMeasure = async (req, res) => {
+  try {
+    const updatedData = await MeasureModel.findOneAndUpdate(
+      {},
+      req.body,
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "measure Updated Successfully",
+      data: updatedData
+    });
+  } catch (error) {
+    console.error("Error saving measure data:", error);
+    res.status(500).json({ message: "Save Failed", error });
   }
 };
 

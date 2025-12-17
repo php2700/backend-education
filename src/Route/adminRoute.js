@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { addBanner, addBlog, getDashboardCounts ,addContactText,deletePSatData,getPSatData, savePSatData,addFooterBanner,getCogatData,saveStbData, deleteStbData ,getStbData, deleteAccuplacerData ,getAccuplacerData ,saveAccuplacerData,getSbacData,saveSbacData ,deleteSbacData,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, deleteMethodology, postMethodology, editMethodology, postK12, } from "../Controller/adminController.js";
+import { addBanner, addBlog, getDashboardCounts ,addContactText,deletePSatData,getPSatData, savePSatData,addFooterBanner,getCogatData,saveStbData, deleteStbData ,getStbData, deleteAccuplacerData ,getAccuplacerData ,saveAccuplacerData,getSbacData,saveSbacData ,deleteSbacData,saveCogatData,deleteCogatData, getAmcData,saveActData ,deleteActData, getActData,getMathKangarooData,saveMathKangarooData,deleteMathKangarooData, saveAmcData ,deleteAmcData , addOffer,getScatData , saveScatData , deleteScatData,getElaData ,saveElaData, deleteElaData,getIseeData ,saveIseeData ,deleteIseeData, getShsatData ,saveShsatData , deleteShsatData , getSatData,saveSatData,  deleteSatData ,getSsatData ,saveSsatData,deleteSsatData , addPlan ,getMembers,addMember,updateMember,deleteMember ,addPricing, addStory, addTrust, addWhyChoose, deleteBanner, deleteBlog, deleteCoreElaDetail, deleteFaqDetail, deleteKangaroo, deleteOffer, deletePlan, deletePricing, deleteScienceDetail, deleteStory, deleteTestImonialDetail, deleteTrust, deleteWhyChoose, editBanner, editBlog, editCoreEla, editFaq, editKangaroo, editOffer, editPlan, editPricing, editScience, editStory, editTestImonial, editTrust, editWhyChoose, Login, postCoreEla, postFaq, postKangaroo, postScience, postTestImonial, upsertAbout, upsertAboutEla, upsertAboutIsee, upsertChapter, upsertCompetition, upsertCoreEla, upsertKangaroo, upsertLanguage, upsertRegistration, upsertScience, upsertTutoring, upsetMathTest, getTerms,createTerm,updateTerm,deleteTerm, deleteMethodology, postMethodology, editMethodology, postK12, saveMeasure, } from "../Controller/adminController.js";
 import { authentication } from "../Middleware/authentication.js";
 import { authorization } from "../Middleware/authorization.js";
 import upload from "../Middleware/upload.js";
-import { getAbout, getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getCotactList, getElaDetail, getFaq, getFooterBanner, getK12, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getMethodology, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
+import { getAbout, getAboutEla, getAboutIsee, getBanner, getBlog, getChapter, getCompetition, getContactText, getCoreEla, getCotactList, getElaDetail, getFaq, getFooterBanner, getK12, getKangaroo, getKangarooDetail, getLanguage, getMathTest, getMeasureData, getMethodology, getOffer, getPlan, getPricing, getRegistration, getScience, getScienceDetail, getStory, getTestImonial, getTrust, getTutoring, getWhyChoose } from "../Controller/userController.js";
 
 
 const adminRouter = Router();
@@ -117,6 +117,10 @@ adminRouter.delete("/blog/:id", authentication, authorization(['admin']), delete
 adminRouter.post("/about-core-ela", authentication, authorization(['admin']), upsertCoreEla)
 adminRouter.get("/about-core-ela", authentication, authorization(['admin']), getCoreEla)
 
+
+/*---------------------about common core ela -----------------------*/
+
+
 /*---------------------about common core  detail   -----------------------*/
 adminRouter.post("/core-ela-detail", authentication, authorization(['admin']), upload.single("image"), postCoreEla)
 adminRouter.patch("/core-ela-detail", authentication, authorization(['admin']), upload.single("image"), editCoreEla)
@@ -127,6 +131,9 @@ adminRouter.delete("/core-ela-detail/:id", authentication, authorization(['admin
 adminRouter.post("/language", authentication, authorization(['admin']), upload.single("image"), upsertLanguage)
 adminRouter.get("/language", authentication, authorization(['admin']), getLanguage)
 
+
+adminRouter.post("/measure", authentication, authorization(['admin']), saveMeasure)
+adminRouter.get("/measure", authentication, authorization(['admin']), getMeasureData)
 /*--------------------registration details---------------*/
 adminRouter.post("/registration", authentication, authorization(['admin']), upsertRegistration)
 adminRouter.get("/registration", authentication, authorization(['admin']), getRegistration)
